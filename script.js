@@ -25,3 +25,33 @@ document.querySelectorAll('.nav-links a').forEach(link => {
     toggleBtn.setAttribute('aria-expanded', 'false');
   });
 });
+
+// Backdrop element for mobile menu (created dynamically)
+let navBackdrop = document.createElement('div');
+navBackdrop.className = 'nav-backdrop';
+document.body.appendChild(navBackdrop);
+
+// toggle backdrop together with nav menu
+function setNavOpen(open) {
+  if (open) {
+    navLinks.classList.add('open');
+    navBackdrop.classList.add('open');
+    toggleBtn.setAttribute('aria-expanded', 'true');
+  } else {
+    navLinks.classList.remove('open');
+    navBackdrop.classList.remove('open');
+    toggleBtn.setAttribute('aria-expanded', 'false');
+  }
+}
+
+toggleBtn.addEventListener('click', () => {
+  setNavOpen(!navLinks.classList.contains('open'));
+});
+
+// clicking the dark backdrop closes the menu
+navBackdrop.addEventListener('click', () => setNavOpen(false));
+
+// close menu automatically when window is resized above mobile width
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 700) setNavOpen(false);
+});
