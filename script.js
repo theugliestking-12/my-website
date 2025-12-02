@@ -17,3 +17,11 @@ toggleBtn.addEventListener("click", () => {
     const expanded = toggleBtn.getAttribute("aria-expanded") === "true" || false;
     toggleBtn.setAttribute("aria-expanded", !expanded);
 });
+
+// Close mobile menu when a nav link is clicked
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    toggleBtn.setAttribute('aria-expanded', 'false');
+  });
+});

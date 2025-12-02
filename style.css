@@ -19,6 +19,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* prevent fixed navbar from covering page content */
+body {
+  padding-top: 70px; /* space for the fixed navbar (adjust if your nav height changes) */
+}
+
+
 /* =============== Hero =============== */
 .hero {
   background:
