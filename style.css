@@ -1,0 +1,167 @@
+/* =============== Base / Reset =============== */
+html {
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background-color: #f0f0f0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: #111;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =============== Hero =============== */
+.hero {
+  background:
+    radial-gradient(600px 300px at 50% 35%, rgba(255,255,255,0.04), transparent 40%),
+    linear-gradient(180deg, #131416 0%, #0f1112 100%);
+  padding: 100px 20px;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Combined .hero-inner rules (layout + animation) */
+.hero-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+
+  /* animation */
+  animation: fadeUp 1s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Headline + subtitle */
+.hero h1 {
+  font-size: 48px;
+  margin: 0 0 20px;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.subtitle {
+  font-size: 20px;
+  margin: 0 0 30px;
+  opacity: 0.9;
+}
+
+/* =============== CTA Button =============== */
+#cta {
+  background: #0077FF;
+  color: #ffffff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+  display: inline-block;
+  text-decoration: none;
+}
+
+/* hover */
+#cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.30);
+}
+
+/* focus (important for accessibility) */
+#cta:focus {
+  outline: 3px solid rgba(0,123,255,0.25);
+  outline-offset: 3px;
+}
+
+/* =============== Animation Keyframes =============== */
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero-inner {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  #cta {
+    transition: none;
+  }
+}
+
+/* =============== Contact Section =============== */
+.contact {
+  background: #f5f5f5;
+  padding: 60px 20px;
+  color: #111;
+}
+
+.contact-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.contact .qr-wrap {
+  display: inline-block;
+  margin-top: 18px;
+  text-align: center;
+}
+
+.contact .qr-wrap img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto;
+}
+
+.contact h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.contact p.small {
+  margin-top: 18px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* =============== Responsive tweaks =============== */
+@media (max-width: 640px) {
+  .hero {
+    padding: 60px 16px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+  }
+
+  .contact .qr-wrap img {
+    width: 140px;
+    height: 140px;
+  }
+}
