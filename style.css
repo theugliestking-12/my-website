@@ -1,11 +1,11 @@
 /* =============== Base / Reset =============== */
-:root{
+:root {
   --bg: #000000;
   --panel: #0f1112;
   --muted: #cccccc;
   --accent: #0077FF;
   --text: #ffffff;
-  --text-dim: rgba(255,255,255,0.85);
+  --text-dim: rgba(255, 255, 255, 0.85);
 }
 
 html {
@@ -14,7 +14,9 @@ html {
   height: 100%;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: inherit;
 }
 
@@ -71,8 +73,18 @@ body {
   letter-spacing: 0.01em;
 }
 
-.site-title .line1 { display:block; font-size:40px; margin-bottom:6px; font-weight:700; }
-.site-title .line2 { display:block; font-size:64px; font-weight:800; }
+.site-title .line1 {
+  display: block;
+  font-size: 40px;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.site-title .line2 {
+  display: block;
+  font-size: 64px;
+  font-weight: 800;
+}
 
 .subtitle {
   font-size: 18px;
@@ -119,8 +131,16 @@ body {
   opacity: 0.9;
 }
 
-.contact h2 { font-size: 28px; margin-bottom: 10px; }
-.contact p.small { margin-top: 18px; font-size: 0.9rem; color: var(--muted); }
+.contact h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.contact p.small {
+  margin-top: 18px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
 
 /* =============== Sections layout =============== */
 .section {
@@ -147,19 +167,35 @@ body {
   line-height: 1.6;
 }
 
-.services { border-top: 1px solid rgba(255,255,255,0.03); }
-.about    { border-top: 1px solid rgba(255,255,255,0.03); }
+.services {
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.about {
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* =============== About Section — Align bullet points =============== */
+.about .content p {
+  text-align: left;
+  max-width: 900px;
+  margin: 0 auto;      /* keeps it centered as a block */
+  line-height: 1.8;
+}
+
 
 /* =============== Services separator (NEW) =============== */
 /* separator between Services heading and tabs */
 .services-separator {
   width: 800px;
   max-width: 86%;
-  height: 8px;
+  height: 2px;
   margin: 10px auto 18px;
   border-radius: 12px;
-  background: rgba(255,255,255,1);  /* solid white */
-  border: none;                    /* remove dotted border */
+  background: rgba(255, 255, 255, 1);
+  /* solid white */
+  border: none;
+  /* remove dotted border */
   /* box-shadow: 0 6px 18px rgba(0,0,0,0.45) inset;
    */
 }
@@ -192,17 +228,20 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-.services-tabs::-webkit-scrollbar { height: 8px; }
+.services-tabs::-webkit-scrollbar {
+  height: 8px;
+}
+
 .services-tabs::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.04);
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 8px;
 }
 
 /* individual tab */
 .service-tab {
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
   color: var(--text);
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   padding: 10px 14px;
   border-radius: 8px;
   cursor: pointer;
@@ -214,15 +253,15 @@ body {
 .service-tab:hover,
 .service-tab:focus {
   transform: translateY(-3px);
-  background: rgba(255,255,255,0.05);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
 }
 
 .service-tab.is-active,
 .service-tab[aria-selected="true"] {
-  background: rgba(255,255,255,0.04);
-  border-color: rgba(255,255,255,0.12);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
 }
 
 /* =============== Animation placeholder =============== */
@@ -231,13 +270,15 @@ body {
   height: 340px;
   background: transparent;
   border-radius: 12px;
-  border: 1px dashed rgba(255,255,255,0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.03);
   display: block;
   margin: 0 auto;
 }
 
 /* =============== Service details panel =============== */
-.services-main { width: 100%; }
+.services-main {
+  width: 100%;
+}
 
 .service-details {
   margin: 28px auto 0;
@@ -273,20 +314,78 @@ body {
   line-height: 1.7;
 }
 
+/* =============== Service Panel Fade-Up Animation =============== */
+.service-panel.fade-up {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeUpPanel 420ms ease-out forwards;
+}
+
+@keyframes fadeUpPanel {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
 /* responsive tweaks */
 @media (max-width: 980px) {
-  .animation-area { height: 260px; }
-  .service-title { font-size: 24px; }
+  .animation-area {
+    height: 260px;
+  }
+
+  .service-title {
+    font-size: 24px;
+  }
 }
 
 @media (max-width: 640px) {
-  .section { padding: 60px 14px; }
-  .animation-area { height: 220px; }
-  .service-title { font-size: 20px; }
-  .service-summary { font-size: 15px; }
-  .service-desc { font-size: 15px; }
-  .services-tabs { gap: 8px; padding: 6px; justify-content: flex-start; }
+  .section {
+    padding: 60px 14px;
+  }
+
+  .animation-area {
+    height: 220px;
+  }
+
+  .service-title {
+    font-size: 20px;
+  }
+
+  .service-summary {
+    font-size: 15px;
+  }
+
+  .service-desc {
+    font-size: 15px;
+  }
+
+  .services-tabs {
+    gap: 8px;
+    padding: 6px;
+    justify-content: flex-start;
+  }
 }
+
+/* =============== Tab Glow Effect (Active Tab) =============== */
+.service-tab.is-active,
+.service-tab[aria-selected="true"] {
+  border-color: rgba(255, 255, 255, 0.9) !important;
+  color: #ffffff;
+  box-shadow:
+    0 0 6px rgba(255, 255, 255, 0.7),
+    0 0 4px rgba(255, 255, 255, 0.6),
+    0 0 14px rgba(255, 255, 255, 0.4);
+  filter: brightness(1.3);
+  transform: translateY(-3px);
+}
+
 
 /* =============== Hero responsive tweaks =============== */
 @media (max-width: 900px) {
@@ -301,10 +400,23 @@ body {
     text-align: center;
   }
 
-  .site-title { font-size: 44px; }
-  .site-title .line1 { font-size: 28px; }
-  .site-title .line2 { font-size: 44px; }
-  .subtitle { font-size: 16px; max-width: 560px; margin: 12px auto 0; }
+  .site-title {
+    font-size: 44px;
+  }
+
+  .site-title .line1 {
+    font-size: 28px;
+  }
+
+  .site-title .line2 {
+    font-size: 44px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    max-width: 560px;
+    margin: 12px auto 0;
+  }
 }
 
 @media (max-width: 640px) {
@@ -313,10 +425,22 @@ body {
     min-height: 60vh;
   }
 
-  .site-title { font-size: 36px; }
-  .site-title .line1 { font-size: 22px; }
-  .site-title .line2 { font-size: 36px; }
-  .subtitle { font-size: 15px; max-width: 420px; }
+  .site-title {
+    font-size: 36px;
+  }
+
+  .site-title .line1 {
+    font-size: 22px;
+  }
+
+  .site-title .line2 {
+    font-size: 36px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    max-width: 420px;
+  }
 }
 
 /* =============== NAVBAR =============== */
@@ -327,7 +451,7 @@ body {
   top: 0;
   width: 100%;
   z-index: 1100;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .nav-inner {
@@ -376,7 +500,7 @@ body {
 .nav-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0, 0, 0, 0.45);
   display: block;
   z-index: 1090;
   opacity: 0;
@@ -391,7 +515,9 @@ body {
 
 /* MOBILE NAV */
 @media (max-width: 700px) {
-  .nav-toggle { display: block; }
+  .nav-toggle {
+    display: block;
+  }
 
   .nav-links {
     position: absolute;
@@ -415,11 +541,142 @@ body {
     pointer-events: auto;
   }
 
-  .nav-links a { display: block; padding: 8px 6px; }
+  .nav-links a {
+    display: block;
+    padding: 8px 6px;
+  }
 }
 
 /* accessibility helpers */
-[role="menu"] { list-style: none; margin: 0; padding: 0; }
-[role="menuitem"]:focus { outline: 3px solid rgba(255,255,255,0.06); outline-offset: 3px; }
+[role="menu"] {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+[role="menuitem"]:focus {
+  outline: 3px solid rgba(255, 255, 255, 0.06);
+  outline-offset: 3px;
+}
+
+
+/* =============== Contact Section Centering =============== */
+.contact-center {
+  text-align: center;
+}
+
+.contact-center h2 {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.contact-center p {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+/* =============== Contact (Discord layout) =============== */
+.contact-center {
+  text-align: center;
+}
+
+.discord-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 12px;
+  justify-content: center;
+}
+
+.discord-img {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  border-radius: 8px;
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.discord-username {
+  font-size: 20px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.contact-note {
+  margin-top: 14px;
+  font-size: 15px;
+  color: var(--text-dim);
+}
+
+/* Glow effect for Discord username */
+.discord-username {
+  font-size: 20px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: transform 180ms ease, 
+              background 180ms ease, 
+              box-shadow 220ms ease, 
+              border-color 180ms ease;
+}
+
+/* Hover glow similar to service tabs */
+.discord-username:hover {
+  transform: translateY(-3px);
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.20);
+  box-shadow: 0 0 18px rgba(255,255,255,0.25), 
+              0 0 28px rgba(255,255,255,0.15);
+}
+
+/* Discord PNG — glow + variable-speed rotation animation (add to style.css) */
+@media (prefers-reduced-motion: reduce) {
+  .discord-img { transform: none; animation: none !important; }
+}
+
+/* Base: subtle static glow so it still looks nice when not animating */
+.discord-img {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  border-radius: 8px;
+  transition: transform 180ms ease, filter 180ms ease;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+  will-change: transform, filter;
+}
+
+/* Animated state: rotation with variable speed and bloom */
+.discord-img.is-animated {
+  animation:
+    discordRotate 6s linear infinite,
+    discordGlow 3s ease-in-out infinite;
+  transform-origin: 50% 50%;
+  /* make the image slightly larger while animating for presence */
+  /* do not force scale if you prefer just rotation: remove the scale in keyframes */
+}
+
+/* variable rotation that speeds up & slows down naturally */
+@keyframes discordRotate {
+  0%   { transform: rotate(0deg)   scale(1.00); }
+  15%  { transform: rotate(45deg)  scale(1.02); } /* speed up */
+  35%  { transform: rotate(190deg) scale(0.98); } /* fast */
+  55%  { transform: rotate(320deg) scale(1.03); } /* slowing */
+  75%  { transform: rotate(480deg) scale(1.01); } /* speeding again */
+  100% { transform: rotate(720deg) scale(1.00); } /* smooth loop */
+}
+
+/* glow/bloom pulse that complements the tabs' white glow */
+@keyframes discordGlow {
+  0%   { box-shadow: 0 0 0 rgba(255,255,255,0); filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6)); }
+  25%  { box-shadow: 0 0 10px rgba(255,255,255,0.18), 0 0 22px rgba(255,255,255,0.10); }
+  50%  { box-shadow: 0 0 22px rgba(255,255,255,0.28), 0 0 36px rgba(255,255,255,0.16); }
+  75%  { box-shadow: 0 0 12px rgba(255,255,255,0.20), 0 0 26px rgba(255,255,255,0.12); }
+  100% { box-shadow: 0 0 0 rgba(255,255,255,0); }
+}
 
 /* end of stylesheet */

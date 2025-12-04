@@ -1,4 +1,4 @@
-// Smooth scroll to contact section (only if #cta exists)
+// Smooth scroll to contact section (only if #cta exists) 
 const ctaBtn = document.getElementById("cta");
 if (ctaBtn) {
   ctaBtn.addEventListener("click", function () {
@@ -101,6 +101,13 @@ if (toggleBtn && navLinks) {
     if (panel) {
       panel.hidden = false;
       panel.setAttribute('aria-hidden', 'false');
+
+      /* ---------------------- Fade-up Animation ---------------------- */
+      panel.classList.remove("fade-up");   // reset
+      void panel.offsetWidth;              // force reflow
+      panel.classList.add("fade-up");      // trigger animation
+      /* --------------------------------------------------------------- */
+
       if (setFocus) panel.focus && panel.focus();
     }
 
@@ -131,16 +138,13 @@ if (toggleBtn && navLinks) {
     // Ensure tab has correct attributes (defensive)
     tab.setAttribute('role', 'tab');
     if (!tab.hasAttribute('tabindex')) {
-      // only the selected tab should be in tab order initially
       const selected = tab.getAttribute('aria-selected') === 'true';
       tab.setAttribute('tabindex', selected ? '0' : '-1');
     }
 
     tab.addEventListener('click', (e) => {
       activateTab(tab, false);
-      // keep focus on the clicked tab
       tab.focus();
-      // ensure correct tabindex values
       tabs.forEach(t => t.setAttribute('tabindex', t === tab ? '0' : '-1'));
       e.preventDefault();
     });
@@ -169,7 +173,7 @@ if (toggleBtn && navLinks) {
           break;
         case 'Enter':
         case ' ':
-        case 'Spacebar': // older browsers
+        case 'Spacebar':
           e.preventDefault();
           activateTab(tab, false);
           tabs.forEach(t => t.setAttribute('tabindex', t === tab ? '0' : '-1'));
@@ -179,7 +183,6 @@ if (toggleBtn && navLinks) {
       }
     });
 
-    // When any tab receives focus, make it reachable via keyboard tab order
     tab.addEventListener('focus', () => {
       tabs.forEach(t => t.setAttribute('tabindex', t === tab ? '0' : '-1'));
     });
@@ -190,7 +193,7 @@ if (toggleBtn && navLinks) {
   activateTab(initialTab, false);
   tabs.forEach(t => t.setAttribute('tabindex', t === initialTab ? '0' : '-1'));
 
-  // Expose a simple API for other scripts (optional)
+  // Expose simple API for other scripts
   window.servicesTabs = {
     activate: (serviceId) => {
       const t = tabs.find(x => x.dataset.service === serviceId);
@@ -201,4 +204,30 @@ if (toggleBtn && navLinks) {
       return active ? active.dataset.service : null;
     }
   };
+})();
+
+(function animateDiscordWhenVisible() {
+  const img = document.querySelector('.discord-img');
+  if (!img) return;
+
+  function setAnim(on) {
+    if (on) img.classList.add('is-animated');
+    else img.classList.remove('is-animated');
+  }
+
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (mq && mq.matches) {
+    setAnim(false);
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      setAnim(entry.isIntersecting && entry.intersectionRatio > 0.25);
+    });
+  }, { threshold: [0, 0.25, 0.5, 1] });
+
+  io.observe(img);
+
+  window.addEventListener('beforeunload', () => io.disconnect());
 })();

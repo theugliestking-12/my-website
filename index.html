@@ -61,13 +61,13 @@
 
         <div class="services-layout">
           <!-- Tab list -->
-
+          <!-- Services tab buttons — updated so data-service on tab-3 matches panel-3 -->
           <div class="services-tabs" role="tablist" aria-label="Services list">
             <button id="tab-1" role="tab" aria-selected="true" aria-controls="panel-1" data-service="health-check"
               class="service-tab">Health Checkup</button>
             <button id="tab-2" role="tab" aria-selected="false" aria-controls="panel-2" data-service="fan-cleaning"
               class="service-tab">Basic Fan Cleaning</button>
-            <button id="tab-3" role="tab" aria-selected="false" aria-controls="panel-3" data-service="upgrade-storage"
+            <button id="tab-3" role="tab" aria-selected="false" aria-controls="panel-3" data-service="upgrade-ram-storage"
               class="service-tab">Upgrading RAM/Storage</button>
             <button id="tab-4" role="tab" aria-selected="false" aria-controls="panel-4" data-service="buying-advice"
               class="service-tab">Advice on Buying a Laptop</button>
@@ -75,13 +75,11 @@
               class="service-tab">Others</button>
           </div>
 
-
           <!-- Main area: full-width animation placeholder -->
           <div class="services-main">
             <div id="service-animation" class="animation-area" aria-hidden="true" title="Animation placeholder"></div>
 
             <!-- detail panels -->
-
             <div class="service-details" aria-live="polite">
 
               <article id="panel-1" class="service-panel" role="tabpanel" aria-labelledby="tab-1"
@@ -91,16 +89,16 @@
                   Understand your laptop’s current health — slowness, heating, battery issues, and overall performance.
                 </p>
                 <p class="service-desc">
-                  During the call, We'll guide you step-by-step to check temperatures, storage health, background activity,
+                  During the call, We'll guide you step-by-step to check temperatures, storage health, background
+                  activity,
                   and performance issues.
                   Based on the results, we'll explain what you can fix at home, what settings to adjust, and what
                   maintenance steps you should follow.
-                  If the problem requires tools or physical repair beyond what can be done online, we’ll clearly tell you
+                  If the problem requires tools or physical repair beyond what can be done online, we’ll clearly tell
+                  you
                   and recommend visiting a technician.
                 </p>
               </article>
-
-
 
               <article id="panel-2" class="service-panel" role="tabpanel" aria-labelledby="tab-2"
                 data-service="fan-cleaning" hidden tabindex="-1">
@@ -115,8 +113,6 @@
                   Perfect if you want to clean it yourself and learn the correct way.
                 </p>
               </article>
-
-
 
               <article id="panel-3" class="service-panel" role="tabpanel" aria-labelledby="tab-3"
                 data-service="upgrade-ram-storage" hidden tabindex="-1">
@@ -133,8 +129,6 @@
                 </p>
               </article>
 
-
-
               <article id="panel-4" class="service-panel" role="tabpanel" aria-labelledby="tab-4"
                 data-service="buying-advice" hidden tabindex="-1">
                 <h3 class="service-title">Advice on Buying a Laptop</h3>
@@ -149,8 +143,6 @@
                 </p>
               </article>
 
-
-              
               <article id="panel-5" class="service-panel" role="tabpanel" aria-labelledby="tab-5" data-service="others"
                 hidden tabindex="-1">
                 <h3 class="service-title">Others</h3>
@@ -174,38 +166,47 @@
     <!-- About (placeholder) -->
     <section id="about-section" class="section about">
       <div class="content contact-inner">
-        <h2>About Me</h2>
+        <h2>Things About Us That You Should Know</h2>
         <p>
-          Hi — I'm Akash, a laptop enthusiast and technician who helps people keep their laptops healthy
-          and fast. I focus on fast diagnostics, clear explanations, and low-cost fixes. (Replace this
-          with your real bio and photo later.)
+          • We provide help for people who don’t know much (or anything) about laptops and have no idea whom to ask
+          about their worries.<br><br>
+
+          • We help you understand your laptop better — performance, health, issues, and what to do next.<br><br>
+
+          • We guide you toward choosing the laptop you actually need, not the one sellers try to push on you.<br><br>
+
+          • We apologize, but we cannot provide home service. Currently, all help is provided through online voice calls
+          only.<br><br>
+
+          • We can assist you in both "Hindi" and "English", so you don’t have to worry about communication.<br><br>
+
+          • You don’t need to pay first. We only ask for payment after we confirm that we can actually help with your
+          issue.
         </p>
+
       </div>
     </section>
 
-    <!-- Contact / Booking -->
+    <!-- Contact Section -->
     <section id="contact-section" class="contact">
-      <div class="contact-inner">
-        <h2>Book a session — ₹60</h2>
-        <p>Pay via UPI / QR and then join our Discord for the call. After payment, click the Discord link below to
-          connect.</p>
+      <div class="contact-inner contact-center">
+        <h2>Contact Us On Discord With My Username</h2>
 
-        <!-- Replace the src with your QR image later -->
-        <div class="qr-wrap">
-          <img src="https://via.placeholder.com/180x180.png?text=QR+Code" alt="QR pay" />
-          <div class="qr-label">Scan to pay (UPI)</div>
+        <!-- Discord icon + username row -->
+        <div class="discord-row">
+          <!-- Replace "discord.png" with your actual PNG file name -->
+          <img src="discord.png" alt="Discord Logo" class="discord-img">
+
+          <!-- Replace with your real Discord username -->
+          <span class="discord-username">dr.laptop.001</span>
         </div>
 
-        <p style="margin-top:18px;">
-          <strong>Join on Discord:</strong>
-          <a href="https://discord.gg/" target="_blank" rel="noopener noreferrer" id="discord-link">Click to open
-            Discord</a>
-        </p>
-
-        <p class="small">First sessions discounted to ₹30 to collect early reviews. Refund policy: if you’re
-          unsatisfied, tell us within 24 hours and we’ll arrange a free follow-up call.</p>
+        <!-- <p class="contact-note">
+          Feel free to DM me on Discord. If I can help with your issue, I’ll reply and guide you from there.
+        </p> -->
       </div>
     </section>
+
   </main>
 
   <script src="script.js"></script>
