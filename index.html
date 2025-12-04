@@ -8,6 +8,7 @@
 
   <!-- main stylesheet -->
   <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
@@ -67,8 +68,8 @@
               class="service-tab">Health Checkup</button>
             <button id="tab-2" role="tab" aria-selected="false" aria-controls="panel-2" data-service="fan-cleaning"
               class="service-tab">Basic Fan Cleaning</button>
-            <button id="tab-3" role="tab" aria-selected="false" aria-controls="panel-3" data-service="upgrade-ram-storage"
-              class="service-tab">Upgrading RAM/Storage</button>
+            <button id="tab-3" role="tab" aria-selected="false" aria-controls="panel-3"
+              data-service="upgrade-ram-storage" class="service-tab">Upgrading RAM/Storage</button>
             <button id="tab-4" role="tab" aria-selected="false" aria-controls="panel-4" data-service="buying-advice"
               class="service-tab">Advice on Buying a Laptop</button>
             <button id="tab-5" role="tab" aria-selected="false" aria-controls="panel-5" data-service="others"
@@ -194,14 +195,18 @@
 
         <!-- Discord icon + username row -->
         <div class="discord-row">
-          <!-- Replace "discord.png" with your actual PNG file name -->
-          <img src="discord.png" alt="Discord Logo" class="discord-img">
+          <div class="discord-glow-wrapper">
+            <img src="discord.png" alt="Discord Logo" class="discord-img">
+          </div>
 
-          <!-- Replace with your real Discord username -->
-          <span class="discord-username">dr.laptop.001</span>
-        </div>
+          <!-- <span class="discord-username">dr.laptop.001</span>
+        </div> -->
 
-        <!-- <p class="contact-note">
+        <!-- Replace with your real Discord username -->
+        <span class="discord-username">dr.laptop.001</span>
+      </div>
+
+      <!-- <p class="contact-note">
           Feel free to DM me on Discord. If I can help with your issue, I’ll reply and guide you from there.
         </p> -->
       </div>

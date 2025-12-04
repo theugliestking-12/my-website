@@ -1,233 +1,230 @@
-// Smooth scroll to contact section (only if #cta exists) 
+/* ================= Smooth scroll for #cta (if present) ================= */
 const ctaBtn = document.getElementById("cta");
 if (ctaBtn) {
   ctaBtn.addEventListener("click", function () {
     const contactSection = document.getElementById("contact-section");
     if (contactSection) {
-      contactSection.scrollIntoView({
-        behavior: "smooth"
-      });
+      contactSection.scrollIntoView({ behavior: "smooth" });
     }
   });
 }
 
-// Navbar toggle for mobile
+/* ================= Navbar toggle & backdrop (mobile) ================= */
 const toggleBtn = document.querySelector(".nav-toggle");
 const navLinks = document.querySelector(".nav-links");
 
-// defensive checks (in case structure changes)
 if (toggleBtn && navLinks) {
-  toggleBtn.addEventListener("click", () => {
-    navLinks.classList.toggle("open");
-
-    // Update button aria-expanded
-    const expanded = toggleBtn.getAttribute("aria-expanded") === "true" || false;
-    toggleBtn.setAttribute("aria-expanded", !expanded);
-  });
-
-  // Close mobile menu when a nav link is clicked
-  document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', () => {
-      navLinks.classList.remove('open');
-      toggleBtn.setAttribute('aria-expanded', 'false');
-    });
-  });
-
-  // Backdrop element for mobile menu (created dynamically)
-  let navBackdrop = document.createElement('div');
-  navBackdrop.className = 'nav-backdrop';
+  // create backdrop once
+  let navBackdrop = document.createElement("div");
+  navBackdrop.className = "nav-backdrop";
   document.body.appendChild(navBackdrop);
 
-  // toggle backdrop together with nav menu
   function setNavOpen(open) {
     if (open) {
-      navLinks.classList.add('open');
-      navBackdrop.classList.add('open');
-      toggleBtn.setAttribute('aria-expanded', 'true');
+      navLinks.classList.add("open");
+      navBackdrop.classList.add("open");
+      toggleBtn.setAttribute("aria-expanded", "true");
     } else {
-      navLinks.classList.remove('open');
-      navBackdrop.classList.remove('open');
-      toggleBtn.setAttribute('aria-expanded', 'false');
+      navLinks.classList.remove("open");
+      navBackdrop.classList.remove("open");
+      toggleBtn.setAttribute("aria-expanded", "false");
     }
   }
 
-  toggleBtn.addEventListener('click', () => {
-    setNavOpen(!navLinks.classList.contains('open'));
+  // toggle on click
+  toggleBtn.addEventListener("click", () => {
+    setNavOpen(!navLinks.classList.contains("open"));
   });
 
-  // clicking the dark backdrop closes the menu
-  navBackdrop.addEventListener('click', () => setNavOpen(false));
+  // close mobile menu when a nav link is clicked
+  document.querySelectorAll(".nav-links a").forEach((link) =>
+    link.addEventListener("click", () => setNavOpen(false))
+  );
 
-  // close menu automatically when window is resized above mobile width
-  window.addEventListener('resize', () => {
+  // clicking backdrop closes menu
+  navBackdrop.addEventListener("click", () => setNavOpen(false));
+
+  // ensure menu closes when resizing above mobile width
+  window.addEventListener("resize", () => {
     if (window.innerWidth > 700) setNavOpen(false);
   });
 }
 
-// ---------------------- Services Tab Logic ----------------------
-// Accessible tab behavior: click, Enter/Space, and Arrow/Home/End navigation
+/* ================= Services Tab Logic (accessible tabs) ================= */
 (function initServiceTabs() {
-  const tabs = Array.from(document.querySelectorAll('.service-tab'));
-  const panels = Array.from(document.querySelectorAll('.service-panel'));
+  const tabs = Array.from(document.querySelectorAll(".service-tab"));
+  const panels = Array.from(document.querySelectorAll(".service-panel"));
   const tablist = document.querySelector('[role="tablist"]');
-  const animationArea = document.getElementById('service-animation');
+  const animationArea = document.getElementById("service-animation");
 
-  if (!tabs.length || !panels.length || !tablist) {
-    // nothing to do if markup is missing
-    return;
-  }
+  if (!tabs.length || !panels.length || !tablist) return;
 
-  // Helper: activate a given tab element
+  // Activate a given tab + panel
   function activateTab(tab, setFocus = true) {
-    // Deactivate all tabs & hide panels
-    tabs.forEach(t => {
-      t.setAttribute('aria-selected', 'false');
-      t.classList.remove('is-active');
-      t.blur && t.blur();
+    // deactivate all tabs & hide panels
+    tabs.forEach((t) => {
+      t.setAttribute("aria-selected", "false");
+      t.classList.remove("is-active");
+      t.setAttribute("tabindex", "-1");
     });
 
-    panels.forEach(p => {
+    panels.forEach((p) => {
       p.hidden = true;
-      p.setAttribute('aria-hidden', 'true');
+      p.setAttribute("aria-hidden", "true");
     });
 
-    // Activate selected
-    tab.setAttribute('aria-selected', 'true');
-    tab.classList.add('is-active');
+    // activate selected tab
+    tab.setAttribute("aria-selected", "true");
+    tab.classList.add("is-active");
+    tab.setAttribute("tabindex", "0");
 
-    // Show corresponding panel by aria-controls (id)
-    const panelId = tab.getAttribute('aria-controls');
+    // show corresponding panel
+    const panelId = tab.getAttribute("aria-controls");
     const panel = panelId ? document.getElementById(panelId) : null;
     if (panel) {
       panel.hidden = false;
-      panel.setAttribute('aria-hidden', 'false');
+      panel.setAttribute("aria-hidden", "false");
 
-      /* ---------------------- Fade-up Animation ---------------------- */
-      panel.classList.remove("fade-up");   // reset
-      void panel.offsetWidth;              // force reflow
-      panel.classList.add("fade-up");      // trigger animation
-      /* --------------------------------------------------------------- */
+      /* ---------------- Fade-up animation trigger ---------------- */
+      panel.classList.remove("fade-up"); // reset
+      // force reflow to restart animation reliably
+      // eslint-disable-next-line no-unused-expressions
+      void panel.offsetWidth;
+      panel.classList.add("fade-up");
+      /* ---------------------------------------------------------- */
 
-      if (setFocus) panel.focus && panel.focus();
+      if (setFocus && typeof panel.focus === "function") {
+        panel.focus();
+      }
     }
 
-    // Dispatch a custom event with service id (useful to hook animations later)
+    // dispatch serviceChange event for future use (animations, tracking, etc.)
     const serviceId = tab.dataset.service || null;
-    window.dispatchEvent(new CustomEvent('serviceChange', {
-      detail: { id: serviceId }
-    }));
+    window.dispatchEvent(
+      new CustomEvent("serviceChange", {
+        detail: { id: serviceId },
+      })
+    );
 
-    // Optionally update animation area aria (it's a placeholder for now)
-    if (animationArea) {
-      animationArea.setAttribute('data-active-service', serviceId || '');
-    }
+    // update animation area attribute (placeholder)
+    if (animationArea) animationArea.setAttribute("data-active-service", serviceId || "");
   }
 
-  // Keyboard navigation helpers
-  function focusTabByIndex(index) {
-    const wrapped = (index + tabs.length) % tabs.length;
+  // keyboard navigation helpers
+  function focusTabByIndex(idx) {
+    const wrapped = (idx + tabs.length) % tabs.length;
     tabs[wrapped].focus();
   }
 
-  function findTabIndex(tab) {
-    return tabs.indexOf(tab);
-  }
-
-  // Click and key listeners for each tab
+  // Initialize attributes and listeners on each tab
   tabs.forEach((tab, i) => {
-    // Ensure tab has correct attributes (defensive)
-    tab.setAttribute('role', 'tab');
-    if (!tab.hasAttribute('tabindex')) {
-      const selected = tab.getAttribute('aria-selected') === 'true';
-      tab.setAttribute('tabindex', selected ? '0' : '-1');
-    }
+    tab.setAttribute("role", "tab");
+    const selected = tab.getAttribute("aria-selected") === "true";
+    tab.setAttribute("tabindex", selected ? "0" : "-1");
 
-    tab.addEventListener('click', (e) => {
+    tab.addEventListener("click", (e) => {
+      e.preventDefault();
       activateTab(tab, false);
       tab.focus();
-      tabs.forEach(t => t.setAttribute('tabindex', t === tab ? '0' : '-1'));
-      e.preventDefault();
     });
 
-    tab.addEventListener('keydown', (e) => {
+    tab.addEventListener("keydown", (e) => {
       const key = e.key;
-
       switch (key) {
-        case 'ArrowLeft':
-        case 'ArrowUp':
+        case "ArrowLeft":
+        case "ArrowUp":
           e.preventDefault();
           focusTabByIndex(i - 1);
           break;
-        case 'ArrowRight':
-        case 'ArrowDown':
+        case "ArrowRight":
+        case "ArrowDown":
           e.preventDefault();
           focusTabByIndex(i + 1);
           break;
-        case 'Home':
+        case "Home":
           e.preventDefault();
           focusTabByIndex(0);
           break;
-        case 'End':
+        case "End":
           e.preventDefault();
           focusTabByIndex(tabs.length - 1);
           break;
-        case 'Enter':
-        case ' ':
-        case 'Spacebar':
+        case "Enter":
+        case " ":
+        case "Spacebar": // legacy
           e.preventDefault();
           activateTab(tab, false);
-          tabs.forEach(t => t.setAttribute('tabindex', t === tab ? '0' : '-1'));
+          tab.focus();
           break;
         default:
           break;
       }
     });
 
-    tab.addEventListener('focus', () => {
-      tabs.forEach(t => t.setAttribute('tabindex', t === tab ? '0' : '-1'));
+    tab.addEventListener("focus", () => {
+      // ensure only focused tab is in tab order
+      tabs.forEach((t) => t.setAttribute("tabindex", t === tab ? "0" : "-1"));
     });
   });
 
-  // Initialize: ensure only one active tab/panel
-  const initialTab = tabs.find(t => t.getAttribute('aria-selected') === 'true') || tabs[0];
-  activateTab(initialTab, false);
-  tabs.forEach(t => t.setAttribute('tabindex', t === initialTab ? '0' : '-1'));
+  // ensure panels are focusable (if not already) — defensive
+  panels.forEach((p) => {
+    if (!p.hasAttribute("tabindex")) p.setAttribute("tabindex", "-1");
+  });
 
-  // Expose simple API for other scripts
+  // initial activation
+  const initialTab = tabs.find((t) => t.getAttribute("aria-selected") === "true") || tabs[0];
+  activateTab(initialTab, false);
+  tabs.forEach((t) => t.setAttribute("tabindex", t === initialTab ? "0" : "-1"));
+
+  // expose small API
   window.servicesTabs = {
     activate: (serviceId) => {
-      const t = tabs.find(x => x.dataset.service === serviceId);
+      const t = tabs.find((x) => x.dataset.service === serviceId);
       if (t) activateTab(t, true);
     },
     getActive: () => {
-      const active = tabs.find(t => t.getAttribute('aria-selected') === 'true');
+      const active = tabs.find((t) => t.getAttribute("aria-selected") === "true");
       return active ? active.dataset.service : null;
-    }
+    },
   };
 })();
 
-(function animateDiscordWhenVisible() {
-  const img = document.querySelector('.discord-img');
+/* ================= Robust Discord PNG animation (visibility aware) ================= */
+(function robustDiscordAnim() {
+  const img = document.querySelector(".discord-img");
   if (!img) return;
 
-  function setAnim(on) {
-    if (on) img.classList.add('is-animated');
-    else img.classList.remove('is-animated');
-  }
-
-  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  // Respect reduced-motion preference
+  const mq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
   if (mq && mq.matches) {
-    setAnim(false);
+    img.classList.remove("is-animated");
     return;
   }
 
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      setAnim(entry.isIntersecting && entry.intersectionRatio > 0.25);
-    });
-  }, { threshold: [0, 0.25, 0.5, 1] });
+  function start() {
+    img.classList.add("is-animated");
+  }
+  function stop() {
+    img.classList.remove("is-animated");
+  }
 
-  io.observe(img);
-
-  window.addEventListener('beforeunload', () => io.disconnect());
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting && e.intersectionRatio > 0.25) start();
+          else stop();
+        });
+      },
+      { threshold: [0, 0.25, 0.5, 1] }
+    );
+    io.observe(img);
+    // cleanup on unload
+    window.addEventListener("beforeunload", () => io.disconnect());
+  } else {
+    // fallback: always animate if observer not supported
+    start();
+  }
 })();
+
