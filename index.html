@@ -1,59 +1,214 @@
-<!-- git add .
-git commit -m "Fix navbar offset and auto-close mobile menu"
-git push -->
-
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>My Website</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dr. Laptop — Expert laptop advice</title>
 
-
+  <!-- main stylesheet -->
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <nav class="nav">
-  <div class="nav-inner">
-    <a class="logo" href="#">Dr. Laptop</a>
 
-    <ul class="nav-links">
-      <li><a href="#">Home</a></li>
-      <li><a href="#contact-section">Book</a></li>
-      <li><a href="#contact-section">Contact</a></li>
-    </ul>
+  <!-- skip link for keyboard users -->
+  <a class="skip-link" href="#main" style="position:absolute;left:-9999px;">Skip to content</a>
 
-    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
-  </div>
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <!-- SIMPLE TEXT LOGO -->
+      <a class="logo" href="#main">Dr. Laptop</a>
+
+      <ul class="nav-links" id="primary-nav" role="menu">
+        <li role="none"><a role="menuitem" href="#main">Home</a></li>
+        <li role="none"><a role="menuitem" href="#services-section">Services</a></li>
+        <li role="none"><a role="menuitem" href="#about-section">About</a></li>
+        <li role="none"><a role="menuitem" href="#contact-section">Contact</a></li>
+      </ul>
+
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    </div>
   </nav>
 
-  <header class="hero">
-    <div class="hero-inner">
-      <h1>Dr. Laptop</h1>
-      <p class="subtitle">Expert laptop advice & health checks — ₹60 per session</p>
-      <button id="cta">Get Help Now</button>
-    </div>
-  </header>
-  <section id="contact-section" class="contact">
-  <div class="contact-inner">
-    <h2>Book a session — ₹60</h2>
-    <p>Pay via UPI / QR and then join our Discord for the call. After payment, click the Discord link below to connect.</p>
+  <main id="main" tabindex="-1">
+    <header class="hero">
+      <div class="hero-inner">
+        <!-- Headline split into two lines -->
+        <h1 class="site-title">
+          <span class="line1">Dr.</span>
+          <span class="line2">Laptop</span>
+        </h1>
 
-    <!-- Replace the src with your QR image later -->
-    <div class="qr-wrap">
-      <img src="https://via.placeholder.com/180x180.png?text=QR+Code" alt="QR pay" />
-      <div class="qr-label">Scan to pay (UPI)</div>
-    </div>
+        <!-- EDIT THIS TEXT to change the subtitle that appears under the title -->
+        <p class="subtitle">
+          Tired of confusing repairs and unclear advice? Get fast, friendly laptop help — diagnostics, cleaning,
+          upgrades and quick troubleshooting for an affordable price. I’ll guide you through fixes and show how to keep
+          your laptop running smoothly.
+        </p>
 
-    <p style="margin-top:18px;">
-      <strong>Join on Discord:</strong>
-      <a href="https://discord.gg/" target="_blank" id="discord-link">Click to open Discord</a>
-    </p>
+        <!-- CTA intentionally removed -->
+      </div>
+    </header>
 
-    <p class="small">First sessions discounted to ₹30 to collect early reviews. Refund policy: if you’re unsatisfied, tell us within 24 hours and we’ll arrange a free follow-up call.</p>
-  </div>
-</section>
+    <!-- Services: Tabbed menu + animation placeholder + detail panel -->
+    <section id="services-section" class="section services" aria-labelledby="services-heading">
+      <div class="content contact-inner">
+        <h2 id="services-heading">Services</h2>
+
+        <!-- separator: curved-edge rectangle between heading and tabs -->
+        <div class="services-separator" aria-hidden="true"></div>
+
+        <div class="services-layout">
+          <!-- Tab list -->
+
+          <div class="services-tabs" role="tablist" aria-label="Services list">
+            <button id="tab-1" role="tab" aria-selected="true" aria-controls="panel-1" data-service="health-check"
+              class="service-tab">Health Checkup</button>
+            <button id="tab-2" role="tab" aria-selected="false" aria-controls="panel-2" data-service="fan-cleaning"
+              class="service-tab">Basic Fan Cleaning</button>
+            <button id="tab-3" role="tab" aria-selected="false" aria-controls="panel-3" data-service="upgrade-storage"
+              class="service-tab">Upgrading RAM/Storage</button>
+            <button id="tab-4" role="tab" aria-selected="false" aria-controls="panel-4" data-service="buying-advice"
+              class="service-tab">Advice on Buying a Laptop</button>
+            <button id="tab-5" role="tab" aria-selected="false" aria-controls="panel-5" data-service="others"
+              class="service-tab">Others</button>
+          </div>
+
+
+          <!-- Main area: full-width animation placeholder -->
+          <div class="services-main">
+            <div id="service-animation" class="animation-area" aria-hidden="true" title="Animation placeholder"></div>
+
+            <!-- detail panels -->
+
+            <div class="service-details" aria-live="polite">
+
+              <article id="panel-1" class="service-panel" role="tabpanel" aria-labelledby="tab-1"
+                data-service="health-check" tabindex="-1">
+                <h3 class="service-title">Health Checkup</h3>
+                <p class="service-summary">
+                  Understand your laptop’s current health — slowness, heating, battery issues, and overall performance.
+                </p>
+                <p class="service-desc">
+                  During the call, We'll guide you step-by-step to check temperatures, storage health, background activity,
+                  and performance issues.
+                  Based on the results, we'll explain what you can fix at home, what settings to adjust, and what
+                  maintenance steps you should follow.
+                  If the problem requires tools or physical repair beyond what can be done online, we’ll clearly tell you
+                  and recommend visiting a technician.
+                </p>
+              </article>
+
+
+
+              <article id="panel-2" class="service-panel" role="tabpanel" aria-labelledby="tab-2"
+                data-service="fan-cleaning" hidden tabindex="-1">
+                <h3 class="service-title">Basic Fan Cleaning</h3>
+                <p class="service-summary">
+                  Dust buildup blocking airflow? We guide you through cleaning your fans safely at home.
+                </p>
+                <p class="service-desc">
+                  If your laptop is overheating or making noise due to clogged fans, we’ll walk you through the full
+                  cleaning process step-by-step over a call. You don’t need professional tools — we show you
+                  how to open the device carefully, remove dust, and improve airflow using simple and safe methods.
+                  Perfect if you want to clean it yourself and learn the correct way.
+                </p>
+              </article>
+
+
+
+              <article id="panel-3" class="service-panel" role="tabpanel" aria-labelledby="tab-3"
+                data-service="upgrade-ram-storage" hidden tabindex="-1">
+                <h3 class="service-title">Upgrading RAM / Storage</h3>
+                <p class="service-summary">
+                  Don’t waste money buying the wrong RAM or SSD — let us help you choose the right one.
+                </p>
+                <p class="service-desc">
+                  Every laptop has specific requirements for upgrades, and choosing the wrong part can be a costly
+                  mistake.
+                  During the call, we’ll help you check exactly what your laptop supports and guide you toward the
+                  correct
+                  RAM or storage option to buy — simple, safe, and without any guesswork.
+                </p>
+              </article>
+
+
+
+              <article id="panel-4" class="service-panel" role="tabpanel" aria-labelledby="tab-4"
+                data-service="buying-advice" hidden tabindex="-1">
+                <h3 class="service-title">Advice on Buying a Laptop</h3>
+                <p class="service-summary">
+                  Get personalized guidance on which laptop fits your needs, budget, and long-term use.
+                </p>
+                <p class="service-desc">
+                  During the call, we help you understand exactly what kind of laptop you should buy based on your
+                  work, gaming, studies, or general use. We also explain what important things you must check before
+                  buying — so you don’t get confused by specs or marketing tricks. You’ll know what to look for,
+                  what to avoid, and which models make the most sense for you.
+                </p>
+              </article>
+
+
+              
+              <article id="panel-5" class="service-panel" role="tabpanel" aria-labelledby="tab-5" data-service="others"
+                hidden tabindex="-1">
+                <h3 class="service-title">Others</h3>
+                <p class="service-summary">
+                  Have a different request? Contact us on Discord and I’ll let you know if I can help.
+                </p>
+                <p class="service-desc">
+                  If your issue isn’t listed in the services above, you can message me directly on Discord.
+                  Describe the problem, and we’ll check whether it’s something we can guide you through on a call.
+                  If it’s possible to solve it online, we’ll happily assist you.
+                </p>
+              </article>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About (placeholder) -->
+    <section id="about-section" class="section about">
+      <div class="content contact-inner">
+        <h2>About Me</h2>
+        <p>
+          Hi — I'm Akash, a laptop enthusiast and technician who helps people keep their laptops healthy
+          and fast. I focus on fast diagnostics, clear explanations, and low-cost fixes. (Replace this
+          with your real bio and photo later.)
+        </p>
+      </div>
+    </section>
+
+    <!-- Contact / Booking -->
+    <section id="contact-section" class="contact">
+      <div class="contact-inner">
+        <h2>Book a session — ₹60</h2>
+        <p>Pay via UPI / QR and then join our Discord for the call. After payment, click the Discord link below to
+          connect.</p>
+
+        <!-- Replace the src with your QR image later -->
+        <div class="qr-wrap">
+          <img src="https://via.placeholder.com/180x180.png?text=QR+Code" alt="QR pay" />
+          <div class="qr-label">Scan to pay (UPI)</div>
+        </div>
+
+        <p style="margin-top:18px;">
+          <strong>Join on Discord:</strong>
+          <a href="https://discord.gg/" target="_blank" rel="noopener noreferrer" id="discord-link">Click to open
+            Discord</a>
+        </p>
+
+        <p class="small">First sessions discounted to ₹30 to collect early reviews. Refund policy: if you’re
+          unsatisfied, tell us within 24 hours and we’ll arrange a free follow-up call.</p>
+      </div>
+    </section>
+  </main>
 
   <script src="script.js"></script>
 </body>
+
 </html>
