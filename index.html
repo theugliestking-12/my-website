@@ -2,17 +2,17 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Dr. Laptop — Expert laptop advice</title>
 
   <!-- main stylesheet -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
+
 
 </head>
 
 <body>
-
   <!-- skip link for keyboard users -->
   <a class="skip-link" href="#main" style="position:absolute;left:-9999px;">Skip to content</a>
 
@@ -33,6 +33,7 @@
   </nav>
 
   <main id="main" tabindex="-1">
+    <!-- =============== HERO =============== -->
     <header class="hero">
       <div class="hero-inner">
         <!-- Headline split into two lines -->
@@ -41,18 +42,16 @@
           <span class="line2">Laptop</span>
         </h1>
 
-        <!-- EDIT THIS TEXT to change the subtitle that appears under the title -->
+        <!-- Subtitle text -->
         <p class="subtitle">
           Tired of confusing repairs and unclear advice? Get fast, friendly laptop help — diagnostics, cleaning,
           upgrades and quick troubleshooting for an affordable price. I’ll guide you through fixes and show how to keep
           your laptop running smoothly.
         </p>
-
-        <!-- CTA intentionally removed -->
       </div>
     </header>
 
-    <!-- Services: Tabbed menu + animation placeholder + detail panel -->
+    <!-- =============== SERVICES =============== -->
     <section id="services-section" class="section services" aria-labelledby="services-heading">
       <div class="content contact-inner">
         <h2 id="services-heading">Services</h2>
@@ -62,7 +61,6 @@
 
         <div class="services-layout">
           <!-- Tab list -->
-          <!-- Services tab buttons — updated so data-service on tab-3 matches panel-3 -->
           <div class="services-tabs" role="tablist" aria-label="Services list">
             <button id="tab-1" role="tab" aria-selected="true" aria-controls="panel-1" data-service="health-check"
               class="service-tab">Health Checkup</button>
@@ -82,7 +80,6 @@
 
             <!-- detail panels -->
             <div class="service-details" aria-live="polite">
-
               <article id="panel-1" class="service-panel" role="tabpanel" aria-labelledby="tab-1"
                 data-service="health-check" tabindex="-1">
                 <h3 class="service-title">Health Checkup</h3>
@@ -90,14 +87,9 @@
                   Understand your laptop’s current health — slowness, heating, battery issues, and overall performance.
                 </p>
                 <p class="service-desc">
-                  During the call, We'll guide you step-by-step to check temperatures, storage health, background
-                  activity,
-                  and performance issues.
-                  Based on the results, we'll explain what you can fix at home, what settings to adjust, and what
-                  maintenance steps you should follow.
-                  If the problem requires tools or physical repair beyond what can be done online, we’ll clearly tell
-                  you
-                  and recommend visiting a technician.
+                  During the call, we'll guide you step-by-step to check temperatures, storage health, background
+                  activity, and performance issues. Based on the results, we'll explain what you can fix at home and
+                  what requires a technician referral.
                 </p>
               </article>
 
@@ -108,10 +100,9 @@
                   Dust buildup blocking airflow? We guide you through cleaning your fans safely at home.
                 </p>
                 <p class="service-desc">
-                  If your laptop is overheating or making noise due to clogged fans, we’ll walk you through the full
-                  cleaning process step-by-step over a call. You don’t need professional tools — we show you
-                  how to open the device carefully, remove dust, and improve airflow using simple and safe methods.
-                  Perfect if you want to clean it yourself and learn the correct way.
+                  If your laptop is overheating or noisy due to clogged fans, we’ll walk you through a careful, safe
+                  cleaning procedure over a call — no expensive tools required. Ideal if you want to learn and do it
+                  yourself.
                 </p>
               </article>
 
@@ -122,11 +113,8 @@
                   Don’t waste money buying the wrong RAM or SSD — let us help you choose the right one.
                 </p>
                 <p class="service-desc">
-                  Every laptop has specific requirements for upgrades, and choosing the wrong part can be a costly
-                  mistake.
-                  During the call, we’ll help you check exactly what your laptop supports and guide you toward the
-                  correct
-                  RAM or storage option to buy — simple, safe, and without any guesswork.
+                  We’ll help you check compatibility and guide you toward the correct upgrade options for your laptop so
+                  you don’t guess.
                 </p>
               </article>
 
@@ -137,81 +125,69 @@
                   Get personalized guidance on which laptop fits your needs, budget, and long-term use.
                 </p>
                 <p class="service-desc">
-                  During the call, we help you understand exactly what kind of laptop you should buy based on your
-                  work, gaming, studies, or general use. We also explain what important things you must check before
-                  buying — so you don’t get confused by specs or marketing tricks. You’ll know what to look for,
-                  what to avoid, and which models make the most sense for you.
+                  During the call we’ll help you match the right laptop to your use-case and show you what to check before
+                  buying so you don’t get fooled by specs-speak.
                 </p>
               </article>
 
-              <article id="panel-5" class="service-panel" role="tabpanel" aria-labelledby="tab-5" data-service="others"
-                hidden tabindex="-1">
+              <article id="panel-5" class="service-panel" role="tabpanel" aria-labelledby="tab-5"
+                data-service="others" hidden tabindex="-1">
                 <h3 class="service-title">Others</h3>
                 <p class="service-summary">
                   Have a different request? Contact us on Discord and I’ll let you know if I can help.
                 </p>
                 <p class="service-desc">
-                  If your issue isn’t listed in the services above, you can message me directly on Discord.
-                  Describe the problem, and we’ll check whether it’s something we can guide you through on a call.
-                  If it’s possible to solve it online, we’ll happily assist you.
+                  Message with the issue on Discord; if it's something we can guide you through online, we’ll arrange a
+                  call.
                 </p>
               </article>
-
             </div>
-
           </div>
         </div>
       </div>
     </section>
 
-    <!-- About (placeholder) -->
+    <!-- =============== ABOUT =============== -->
     <section id="about-section" class="section about">
       <div class="content contact-inner">
         <h2>Things About Us That You Should Know</h2>
+        <div class="about-separator"></div>
+
         <p>
-          • We provide help for people who don’t know much (or anything) about laptops and have no idea whom to ask
-          about their worries.<br><br>
+          • We provide help for people who don’t know much (or anything) about laptops and have no idea whom to ask.<br><br>
 
           • We help you understand your laptop better — performance, health, issues, and what to do next.<br><br>
 
-          • We guide you toward choosing the laptop you actually need, not the one sellers try to push on you.<br><br>
+          • We guide you toward choosing the laptop you actually need, not the one sellers push on you.<br><br>
 
-          • We apologize, but we cannot provide home service. Currently, all help is provided through online voice calls
-          only.<br><br>
+          • We cannot provide home service — all help is via online voice calls only.<br><br>
 
-          • We can assist you in both "Hindi" and "English", so you don’t have to worry about communication.<br><br>
+          • We can assist you in both "Hindi" and "English".<br><br>
 
-          • You don’t need to pay first. We only ask for payment after we confirm that we can actually help with your
-          issue.
+          • You don’t need to pay first. We only ask for payment after we confirm we can help.
         </p>
-
       </div>
     </section>
 
-    <!-- Contact Section -->
+    <!-- =============== CONTACT =============== -->
     <section id="contact-section" class="contact">
       <div class="contact-inner contact-center">
         <h2>Contact Us On Discord With My Username</h2>
+        <div class="contact-separator"></div>
+
 
         <!-- Discord icon + username row -->
         <div class="discord-row">
-          <div class="discord-glow-wrapper">
+          <!-- glowing wrapper (rotation applied to wrapper for reliability) -->
+          <div class="discord-glow-wrapper" aria-hidden="false" role="img" aria-label="Discord">
             <img src="discord.png" alt="Discord Logo" class="discord-img">
           </div>
 
-          <!-- <span class="discord-username">dr.laptop.001</span>
-        </div> -->
-
-        <!-- Replace with your real Discord username -->
-        <span class="discord-username">dr.laptop.001</span>
-      </div>
-
-      <!-- <p class="contact-note">
-          Feel free to DM me on Discord. If I can help with your issue, I’ll reply and guide you from there.
-        </p> -->
+          <!-- Replace with your real Discord username -->
+          <span class="discord-username">dr.laptop.001</span>
+        </div>
       </div>
     </section>
-
   </main>
 
   <script src="script.js"></script>

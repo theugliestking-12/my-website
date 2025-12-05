@@ -228,3 +228,104 @@ if (toggleBtn && navLinks) {
   }
 })();
 
+/* ================= Fallback: ensure discord animation runs =================
+   Appends .is-animated to any .discord-img if observer didn't add it.
+   Safe (idempotent) and respects reduced-motion via CSS media query.
+*/
+(function ensureDiscordAnimated() {
+  function apply() {
+    const imgs = document.querySelectorAll('.discord-img');
+    imgs.forEach(img => {
+      if (!img) {
+        return;
+      }
+      if (!img.classList.contains('is-animated')) {
+        img.classList.add('is-animated');
+        // debug log — remove if you don't want console messages
+        console.log('[dr-laptop] forced .is-animated on .discord-img');
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', apply, { once: true });
+  } else {
+    apply();
+  }
+
+  // second attempt in case the image is injected/loaded late (OneDrive/slow file)
+  setTimeout(apply, 1000);
+})();
+
+/* ================= Manual rAF rotation + neon brightness loop for .discord-img
+   Fallback/guarantee: directly sets inline transform + filter every frame.
+   Respects prefers-reduced-motion.
+*/
+(function discordManualSpin() {
+  const img = document.querySelector('.discord-img');
+  if (!img) return;
+
+  // Respect reduced-motion preference
+  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced) {
+    // ensure a baseline is present but do not animate
+    img.style.transform = 'rotate(0deg)';
+    img.style.transition = 'transform 160ms linear';
+    return;
+  }
+
+  // Controls
+  const LOOP_PERIOD_MS = 4200;    // full bright→dim→bright cycle (ms)
+  const BASE_ANGULAR_SPEED = 0.15; // base radians/sec (slow)
+  const SPEED_AMPLITUDE = 1.7;     // added when glow is dim (makes it much faster)
+
+  // We'll track a rotation angle in radians and update transform each frame
+  let angle = 0;
+  let last = performance.now();
+
+  // helper: ease in-out for smooth bright/dim shape
+  function easeInOut(t) {
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  }
+
+  function frame(now) {
+    const dt = (now - last) / 1000; // seconds
+    last = now;
+
+    // phase in [0,1] repeating
+    const phase = ((now % LOOP_PERIOD_MS) / LOOP_PERIOD_MS); // 0..1
+    // brightness factor: 0 = dim, 1 = bright (we want brightness oscillation)
+    const bright = easeInOut( (Math.sin(phase * Math.PI * 2) + 1) / 2 );
+
+    // map brightness -> angular speed (bright => slower, dim => faster)
+    // inverse mapping: speed = base + amplitude * (1 - bright)
+    const angularSpeed = BASE_ANGULAR_SPEED + SPEED_AMPLITUDE * (1 - bright); // radians/sec
+
+    // update angle (radians)
+    angle += angularSpeed * dt * 3.14159; // scale so speed feels right; tweak if needed
+
+    // write transform (rotation + slight scale for life)
+    const deg = (angle * 180 / Math.PI) % 360;
+    const scale = 1 + 0.025 * (0.5 + 0.5 * Math.sin(phase * Math.PI * 2)); // tiny breathing
+    img.style.transform = `rotate(${deg}deg) scale(${scale})`;
+
+    // update filter to reflect neon brightness (stronger when bright)
+    // You can tune the rgba values to match your neon colors
+    const whiteInt = 0.6 + 0.9 * bright; // 0.6..1.5
+    const cyanInt  = 0.35 + 1.05 * bright; // 0.35..1.4
+    const purpleInt= 0.2 + 0.9 * bright; // 0.2..1.1
+
+    // set drop-shadow chain: inner white, outer cyan, outer purple
+    img.style.filter =
+      `drop-shadow(0 0 ${4 * whiteInt}px rgba(255,255,255,${0.9 * bright + 0.25})) ` +
+      `drop-shadow(0 0 ${8 * cyanInt}px rgba(0,200,255,${0.75 * bright + 0.12})) ` +
+      `drop-shadow(0 0 ${16 * purpleInt}px rgba(120,0,255,${0.45 * bright + 0.06}))`;
+
+    // schedule next frame
+    requestAnimationFrame(frame);
+  }
+
+  // start loop
+  last = performance.now();
+  requestAnimationFrame(frame);
+})();
