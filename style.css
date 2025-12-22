@@ -33,6 +33,7 @@ body {
   padding-top: 70px;
   line-height: 1.5;
   /* font-family: "Exo 2", sans-serif; */
+  overflow-y: scroll;   /* keeps page scrollable even without native bar */
 }
 
 /* skip link visible on focus */
@@ -298,13 +299,38 @@ body {
 /* =============== Animation placeholder =============== */
 .animation-area {
   width: 100%;
-  height: 340px;
+  aspect-ratio: 16 / 9;          /* forces 16:9 */
   background: transparent;
-  border-radius: 12px;
-  border: 1px dashed rgba(255, 255, 255, 0.03);
+
+  border-radius: 18px;           /* curved corners */
+  border: 1px dashed rgba(255, 255, 255, 0.06);
+
   display: block;
   margin: 0 auto;
+
+  overflow: hidden;              /* IMPORTANT for future animations */
 }
+
+/* =============== Service ani place holder fade  =============== */
+
+.animation-area video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+/* fade states (used ONLY on skip) */
+.animation-area video.fade-out {
+  opacity: 0;
+}
+
+.animation-area video.fade-in {
+  opacity: 1;
+}
+
 
 /* =============== Service details panel =============== */
 .services-main {
@@ -625,8 +651,10 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-    animation: rotateWrapper 3s linear infinite !important;
+  animation: rotateWrapper 2.5s infinite !important;
+  /* 2.6 */
   transform-origin: center center !important;
+  /* border-radius:"50%" */
 }
 
 @keyframes rotateWrapper {
@@ -640,7 +668,7 @@ body {
   45% {
     transform: translateY(4px) translateX(-6px) rotate(140deg);
     animation-timing-function: ease-in;
-  }*/
+  } */
 
   /* quick burst to hit the exact half (180deg) — small time, big rotation => fast */
   80% {
@@ -651,41 +679,11 @@ body {
   /* second half: slow, smooth finish from 180 -> 360 over the remaining time */
   100% {
     transform: translateY(4px) translateX(-6px) rotate(360deg);
-    animation-timing-function: ease-in;
+    animation-timing-function: ease-out;
   }
 }
 
-/* ---------------- Neon Glow Behind PNG (halo) ---------------- */
-.discord-glow-wrapper::before {
-  content: "";
-  position: absolute;
-  width: 88px;
-  height: 88px;
-  border-radius: 50%;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 1;
 
-  background: radial-gradient(
-    rgba(255,255,255,0.55),
-    rgba(67, 214, 255, 0.35) 40%,
-    rgba(134, 27, 255, 0.2) 70%,
-    transparent 100%
-  );
-
-  filter: blur(14px);
-  opacity: 0.85;
-
-  animation: neonGlowHalo 3s ease-in-out infinite;
-}
-
-@keyframes neonGlowHalo {
-  0%   { opacity: 0.08; filter: blur(14px); }
-  50%  { opacity: 0.9;    filter: blur(20px); }
-  100% { opacity: 0.08; filter: blur(14px); }
-}
 
 /* ---------------- Neon Glow ON PNG ---------------- */
 .discord-img {
@@ -700,7 +698,8 @@ body {
     drop-shadow(0 0 7px rgba(0,200,255,0.8))
     drop-shadow(0 0 12px rgba(120,0,255,0.6));
 
-  animation: neonGlowIcon 2.6s ease-in-out infinite;
+  animation: neonGlowIcon 2.5s ease-in-out infinite;
+  /* 2.6 */
 }
 
 @keyframes neonGlowIcon {
@@ -712,9 +711,9 @@ body {
   }
   50% {
     filter:
-      drop-shadow(0 0 4px rgba(255,255,255,1))
-      drop-shadow(0 0 10px rgba(0,200,255,1))
-      drop-shadow(0 0 18px rgba(120,0,255,0.75));
+      drop-shadow(0 0 8px rgba(255,255,255,1))
+      drop-shadow(0 0 16px rgba(0,200,255,1))
+      drop-shadow(0 0 24px rgba(120,0,255,0.75));
   }
   100% {
     filter:
@@ -726,24 +725,7 @@ body {
 
 
 
-.discord-img {
-  width: 55px;
-  height: 55px;
-  object-fit: contain;
-  border-radius: 8px;
-  /* transition: transform 180ms ease, filter 180ms ease; */
-  /* animation: rotateDiscord 3s linear infinite !important;
-  transform-origin: center center !important; */
-}
 
-@keyframes rotateDiscord {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 
 /* .discord-username {
   font-size: 20px;
@@ -789,98 +771,37 @@ body {
    Discord PNG — Soft White Glow (No Rotation)
    ============================================================ */
 
-/* Disable animation if user prefers reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .discord-img {
-    animation: none !important;
-    transform: none !important;
-  }
+
+
+
+
+
+
+
+
+
+.copy-btn {
+  font-family: inherit;
+  padding: 8px 14px;
+  margin-left: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 8px;
+  background: rgb(0, 0, 0);
+  border: 1px solid rgb(135,135,135);
+  color: var(--text);
+  transition: 180ms ease;
+}
+
+.copy-btn:hover {
+    transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0);
+  border-color: rgb(255, 255, 255);
+  box-shadow: 0 0  9px rgb(255, 255, 255), 
+              0 0 28px rgba(76, 64, 255, 0.665);
 }
 
 
-
-
-
-/* =============== Discord Glow Background (Behind PNG) =============== */
-
-/* base png styling */
-/* Discord PNG (Neon Glow ON the icon itself) */
-/* .discord-img {
-  width: 55px;
-  height: 55px;
-  object-fit: contain;
-  z-index: 2; */
-
-  /* neon-style glow around the actual PNG shape */
-  /* filter: drop-shadow(0 0 4px rgba(255,255,255,1))
-          drop-shadow(0 0 8px rgba(157, 234, 255, 0.9))
-          drop-shadow(0 0 14px rgba(0,200,255,0.7))
-          drop-shadow(0 0 22px rgba(120,0,255,0.4));
-
-  transition: filter 0.2s ease, transform 0.2s ease;
-} */
-
-/* Optional: glow intensifies when PNG is animating */
-/* .discord-img.is-animated {
-  filter: drop-shadow(0 0 6px rgba(255,255,255,1))
-          drop-shadow(0 0 12px rgba(0,200,255,1))
-          drop-shadow(0 0 20px rgba(97, 221, 255, 0.9))
-          drop-shadow(0 0 30px rgba(138, 35, 255, 0.6));
-
-  transform: scale(1.05);
-} */
-
-
-
-
-/* glowing circle behind png */
-/* .discord-glow-wrapper::before {
-  content: "";
-  position: absolute;
-  width: 88px;
-  height: 88px;
-  border-radius: 50%;
-  background: radial-gradient(
-    rgba(255, 255, 255, 0.55),
-    rgba(255, 255, 255, 0.05) 70%
-  );
-  filter: blur(18px);
-  z-index: 1;
-  animation: glowPulse 2.8s ease-in-out infinite;
-} */
-
-/* pulse animation */
-/* @keyframes glowPulse {
-  0%   { transform: scale(0.92); opacity: 0.45; }
-  50%  { transform: scale(1.05); opacity: 0.9; }
-  100% { transform: scale(0.92); opacity: 0.45; }
-} */
-
-/* Wrapper centers icon perfectly and allows custom nudging */
-.discord-glow-wrapper {
-  position: relative;
-  display: inline-flex;
-  align-items: center;   /* vertically aligns with username */
-  justify-content: center;
-  margin-right: 10px;    /* small gap from the username */
-  transform: translateY(4px) translateX(-6px);  /* FIX: push icon down slightly + left */
-}
-
-/* Glow behind the PNG */
-/* .discord-glow-wrapper::before {
-  content: "";
-  position: absolute;
-  width: 88px;
-  height: 88px;
-  border-radius: 50%;
-  background: radial-gradient(
-    rgba(255, 255, 255, 0.55),
-    rgba(255, 255, 255, 0.05) 70%
-  );
-  filter: blur(18px);
-  z-index: 1;
-  animation: glowPulse 2.8s ease-in-out infinite;
-} */
 
 /* PNG stays sharp */
 .discord-img {
@@ -890,88 +811,220 @@ body {
   z-index: 2; /* keep above glow */
 }
 
-/* Glow pulse animation */
-/* @keyframes glowPulse {
-  0%   { transform: scale(0.92); opacity: 0.45; }
-  50%  { transform: scale(1.05); opacity: 0.9; }
-  100% { transform: scale(0.92); opacity: 0.45; }
-} */
 
-/* =============== Discord PNG Neon Rotation (Loop) =============== */
+/* =============== Custom Vertical Scrollbar =============== */
 
-/* Applied when JS adds .is-animated */
-.discord-img.is-animated {
-  animation: discordSpin 4s ease-in-out infinite;
-  transform-origin: center center;
+::-webkit-scrollbar {
+  width: 3px;                 /* thin scrollbar */
 }
 
-/* Rotation speed changes based on glow intensity */
-@keyframes discordSpin {
-  0% {
-    transform: rotate(0deg);
-    filter: drop-shadow(0 0 3px rgba(255,255,255,0.8))
-            drop-shadow(0 0 6px rgba(0,200,255,0.7))
-            drop-shadow(0 0 12px rgba(0,200,255,0.4));
-  }
-
-  /* 🔥 Bright glow (slower rotation) */
-  35% {
-    transform: rotate(140deg);
-    filter: drop-shadow(0 0 6px rgba(255,255,255,1))
-            drop-shadow(0 0 14px rgba(0,200,255,1))
-            drop-shadow(0 0 22px rgba(120,0,255,0.7));
-  }
-
-  50% {
-    transform: rotate(180deg);
-    filter: drop-shadow(0 0 8px rgba(255,255,255,1))
-            drop-shadow(0 0 18px rgba(0,200,255,1))
-            drop-shadow(0 0 28px rgba(120,0,255,0.9));
-  }
-
-  /* 🔥 Dim glow (faster rotation) */
-  85% {
-    transform: rotate(330deg);
-    filter: drop-shadow(0 0 3px rgba(255,255,255,0.8))
-            drop-shadow(0 0 6px rgba(0,200,255,0.7))
-            drop-shadow(0 0 12px rgba(0,200,255,0.4));
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
+::-webkit-scrollbar-track {
+  background: transparent;    /* remove ugly track */
 }
 
-/* FORCE: ensure rotation runs when .is-animated is present.
-   Uses high specificity + !important so it can't be overridden unintentionally. */
-/* .discord-row .discord-img.is-animated,
-.discord-img.is-animated {
-  animation: discordSpin 4s ease-in-out infinite !important;
-  transform-origin: 50% 50% !important;
-  will-change: transform, filter !important;
-  /* keep any existing transform transitions intact */
-  /* transition: transform 0.3s ease, filter 0.3s ease !important;
-} */ 
+::-webkit-scrollbar-thumb {
+  background: rgb(255, 255, 255);     /* white, semi-transparent */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.995);  /* glow like section separator */
+}
 
-/* FORCE: ensure discordSpin actually runs (duration, play-state, vendor fallbacks) */
-/* .discord-img.is-animated,
-.discord-row .discord-img.is-animated {
-  
-  -webkit-animation-name: discordSpin !important;
-  -webkit-animation-duration: 4s !important;
-  -webkit-animation-timing-function: ease-in-out !important;
-  -webkit-animation-iteration-count: infinite !important;
-  -webkit-animation-play-state: running !important;
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.973);     /* brighter on hover */
+  box-shadow: 0 0 14px rgb(255, 255, 255);
+}
 
-  animation-name: discordSpin !important;
-  animation-duration: 4s !important;
-  animation-timing-function: ease-in-out !important;
-  animation-iteration-count: infinite !important;
-  animation-play-state: running !important;
+/* For Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255, 255, 255) transparent;
+}
 
-  transform-origin: 50% 50% !important;
-  will-change: transform, filter !important;
-} */
+/* ---------- Force-remove scrollbar arrows & corner (place at the END of style.css) ---------- */
+
+/* Chrome/Edge/Opera/Brave (WebKit/Blink) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* track and thumb styling (keeps your small glowing thumb) */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.6);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+/* remove any scrollbar corner */
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* remove scrollbar buttons (all possible pseudo parts) */
+::-webkit-scrollbar-button,
+::-webkit-scrollbar-button:vertical:decrement,
+::-webkit-scrollbar-button:vertical:increment,
+::-webkit-scrollbar-button:horizontal:decrement,
+::-webkit-scrollbar-button:horizontal:increment {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  appearance: none !important;
+}
+
+/* additional resets if the UA uses track pieces */
+::-webkit-scrollbar-track-piece:start,
+::-webkit-scrollbar-track-piece:end {
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
+/* Firefox: use thin + color (Firefox doesn't show arrows) */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255, 255, 255) transparent;
+}
+
+/* Safety: hide arrows by forcing native appearance none for any element that might draw them */
+* {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+/* =============== Custom overlay scrollbar (visual replacement) =============== */
+/* Visual style tuned to match your section separator (thin white line + soft glow) */
+
+.custom-scrollbar {
+  position: fixed;
+  right: 14px;                /* distance from page edge - adjust if needed */
+  top: 0;
+  height: 100vh;
+  width: 18px;                /* space reserved for the custom scrollbar */
+  pointer-events: none;       /* allow clicks through except on the thumb */
+  z-index: 9999;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* the invisible track that fills the vertical area */
+.custom-scrollbar .track {
+  position: relative;
+  width: 6px;                 /* visible width of the line */
+  height: 100%;
+  pointer-events: none;
+  display: block;
+}
+
+/* the draggable thumb (the visible glowing bar)ssssdsd */ 
+.custom-scrollbar .thumb {
+  position: absolute;
+  left: 0;
+  width: 6px;
+  height: 80px;               /* initial; JS will resize */
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.863);
+  box-shadow: 0 0 10px rgba(255,255,255,0.45);
+  opacity: 0.95;
+  transform: translateY(0);
+  pointer-events: auto;       /* allow interaction */
+  cursor: grab;
+  transition: box-shadow 120ms ease, opacity 120ms ease;
+}
+
+/* visual feedback while dragging */
+.custom-scrollbar .thumb:active {
+  cursor: grabbing;
+  box-shadow: 0 0 14px rgba(255,255,255,0.85);
+  opacity: 1;
+}
+
+/* hide the overlay on very small widths if it interferes */
+@media (max-width: 700px) {
+  .custom-scrollbar { display: none; }
+}
+
+/* optional: if you still want to reduce native scrollbar visual clutter,
+   keep the earlier "thin" rules too (they won't affect the overlay). */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); }
+
+/* Remove native scrollbar completely (Chrome, Edge, Safari, Opera) */
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: none !important;
+}
+
+/* ---------------- Hide native horizontal scrollbar on .services-tabs ---------------- */
+.services-tabs {
+  overflow-x: auto;         /* keep horizontal scrolling behavior */
+  scrollbar-width: none;    /* firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+/* hide webkit scrollbar specifically for the tabs area */
+.services-tabs::-webkit-scrollbar {
+  height: 0;                /* remove native horizontal bar */
+  display: none;
+}
+
+/* ---------------- Custom horizontal scrollbar container (positioned under tabs) ---------------- */
+.custom-hscroll {
+  position: relative;
+  width: 100%;
+  height: 18px;                 /* total space reserved under tabs */
+  display: block;
+  margin-top: 8px;              /* small gap below tabs */
+  pointer-events: none;         /* allow clicks through except on thumb */
+}
+
+/* track (thin centered line) */
+.custom-hscroll .track {
+  position: absolute;
+  left: 8px;                    /* small inset to align with tab content */
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 6px;                  /* visible line height */
+  border-radius: 6px;
+  background: transparent;
+  pointer-events: none;
+}
+
+/* thumb (draggable glowing bar) */
+.custom-hscroll .thumb {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) translateX(0);
+  height: 6px;
+  border-radius: 6px;
+  width: 80px;                  /* initial - JS will resize */
+  background: rgba(255, 255, 255, 0.863);
+  box-shadow: 0 0 2px rgb(255, 255, 255);
+  pointer-events: auto;         /* allow dragging */
+  cursor: grab;
+  transition: box-shadow 120ms ease, opacity 120ms ease;
+}
+
+/* visuals while dragging */
+.custom-hscroll .thumb:active { cursor: grabbing; box-shadow: 0 0 18px rgb(255, 255, 255); }
+
+/* hide on small screens if it gets crowded */
+@media (max-width: 640px) {
+  .custom-hscroll { display: none; }
+}
+
 
 
 /* end of stylesheet */

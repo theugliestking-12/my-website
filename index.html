@@ -66,17 +66,46 @@
               class="service-tab">Health Checkup</button>
             <button id="tab-2" role="tab" aria-selected="false" aria-controls="panel-2" data-service="fan-cleaning"
               class="service-tab">Basic Fan Cleaning</button>
-            <button id="tab-3" role="tab" aria-selected="false" aria-controls="panel-3"
-              data-service="upgrade-ram-storage" class="service-tab">Upgrading RAM/Storage</button>
-            <button id="tab-4" role="tab" aria-selected="false" aria-controls="panel-4" data-service="buying-advice"
-              class="service-tab">Advice on Buying a Laptop</button>
+            <button id="tab-3" role="tab" aria-selected="false" aria-controls="panel-3" data-service="ram"
+              class="service-tab">
+              RAM Upgrade
+            </button>
+
+            <button id="tab-4" role="tab" aria-selected="false" aria-controls="panel-4" data-service="storage"
+              class="service-tab">
+              Storage Upgrade
+            </button>
+
             <button id="tab-5" role="tab" aria-selected="false" aria-controls="panel-5" data-service="others"
               class="service-tab">Others</button>
           </div>
 
           <!-- Main area: full-width animation placeholder -->
           <div class="services-main">
-            <div id="service-animation" class="animation-area" aria-hidden="true" title="Animation placeholder"></div>
+            <div id="service-animation" class="animation-area" aria-hidden="true">
+              <video id="healthVideo" data-service="health-check" preload="auto" muted playsinline>
+                <source src="cpu-gpu.mp4" type="video/mp4">
+              </video>
+
+              <video id="ramVideo" data-service="ram" preload="auto" muted playsinline hidden>
+                <source src="ram.mp4" type="video/mp4">
+              </video>
+
+              <video id="storageVideo" data-service="storage" preload="auto" muted playsinline hidden>
+                <source src="storage.mp4" type="video/mp4">
+              </video>
+              <video id="fanIntroVideo" data-service="fan-cleaning" data-step="intro" preload="auto" muted playsinline
+                hidden>
+                <source src="fan-move.mp4" type="video/mp4">
+              </video>
+
+              <video id="fanSpinVideo" data-service="fan-cleaning" data-step="spin" preload="auto" muted playsinline
+                hidden>
+                <source src="fan-spin.mp4" type="video/mp4">
+              </video>
+
+            </div>
+
 
             <!-- detail panels -->
             <div class="service-details" aria-live="polite">
@@ -106,8 +135,8 @@
                 </p>
               </article>
 
-              <article id="panel-3" class="service-panel" role="tabpanel" aria-labelledby="tab-3"
-                data-service="upgrade-ram-storage" hidden tabindex="-1">
+              <article id="panel-3" class="service-panel" role="tabpanel" aria-labelledby="tab-3" data-service="ram"
+                hidden tabindex="-1">
                 <h3 class="service-title">Upgrading RAM / Storage</h3>
                 <p class="service-summary">
                   Don’t waste money buying the wrong RAM or SSD — let us help you choose the right one.
@@ -125,13 +154,14 @@
                   Get personalized guidance on which laptop fits your needs, budget, and long-term use.
                 </p>
                 <p class="service-desc">
-                  During the call we’ll help you match the right laptop to your use-case and show you what to check before
+                  During the call we’ll help you match the right laptop to your use-case and show you what to check
+                  before
                   buying so you don’t get fooled by specs-speak.
                 </p>
               </article>
 
-              <article id="panel-5" class="service-panel" role="tabpanel" aria-labelledby="tab-5"
-                data-service="others" hidden tabindex="-1">
+              <article id="panel-5" class="service-panel" role="tabpanel" aria-labelledby="tab-5" data-service="others"
+                hidden tabindex="-1">
                 <h3 class="service-title">Others</h3>
                 <p class="service-summary">
                   Have a different request? Contact us on Discord and I’ll let you know if I can help.
@@ -154,7 +184,8 @@
         <div class="about-separator"></div>
 
         <p>
-          • We provide help for people who don’t know much (or anything) about laptops and have no idea whom to ask.<br><br>
+          • We provide help for people who don’t know much (or anything) about laptops and have no idea whom to
+          ask.<br><br>
 
           • We help you understand your laptop better — performance, health, issues, and what to do next.<br><br>
 
@@ -184,7 +215,8 @@
           </div>
 
           <!-- Replace with your real Discord username -->
-          <span class="discord-username">dr.laptop.001</span>
+          <span class="discord-username" id="discordName">dr.laptop.001</span>
+          <button class="copy-btn" id="copyDiscord">Copy</button>
         </div>
       </div>
     </section>

@@ -190,142 +190,423 @@ if (toggleBtn && navLinks) {
   };
 })();
 
-/* ================= Robust Discord PNG animation (visibility aware) ================= */
-(function robustDiscordAnim() {
-  const img = document.querySelector(".discord-img");
-  if (!img) return;
 
-  // Respect reduced-motion preference
-  const mq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
-  if (mq && mq.matches) {
-    img.classList.remove("is-animated");
-    return;
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const copyBtn = document.getElementById("copyDiscord");
+  const nameSpan = document.getElementById("discordName");
+
+  copyBtn.addEventListener("click", async () => {
+    try {
+      const text = nameSpan.textContent.trim();
+      await navigator.clipboard.writeText(text);
+
+      // Feedback
+      copyBtn.innerText = "Copied!";
+      setTimeout(() => (copyBtn.innerText = "Copy"), 1200);
+    } catch (err) {
+      console.error("Copy failed:", err);
+      copyBtn.innerText = "Error";
+      setTimeout(() => (copyBtn.innerText = "Copy"), 1200);
+    }
+  });
+});
+
+/* =============== Custom overlay scrollbar script ===============
+   Creates .custom-scrollbar, updates thumb size/position, enables drag-to-scroll.
+   Drop at end of script.js (after DOMContent loaded scripts).
+*/
+
+(function createCustomScrollbar() {
+  // bail early if environment doesn't support required APIs
+  if (!document.body) return;
+
+  // create DOM
+  const wrapper = document.createElement('div');
+  wrapper.className = 'custom-scrollbar';
+  wrapper.innerHTML = '<div class="track"><div class="thumb" aria-hidden="true"></div></div>';
+  document.body.appendChild(wrapper);
+
+  const track = wrapper.querySelector('.track');
+  const thumb = wrapper.querySelector('.thumb');
+
+  // compute sizes and update thumb
+  function updateThumb() {
+    const doc = document.documentElement;
+    const scrollTop = window.scrollY || doc.scrollTop;
+    const clientH = window.innerHeight || doc.clientHeight;
+    const scrollH = Math.max(doc.scrollHeight || document.body.scrollHeight, document.body.scrollHeight);
+
+    // avoid division by zero
+    if (scrollH <= clientH) {
+      thumb.style.display = 'none';
+      return;
+    } else {
+      thumb.style.display = '';
+    }
+
+    const trackH = track.clientHeight;
+    // thumb height proportional to visible area (min 28px)
+    const thumbH = Math.max((clientH / scrollH) * trackH, 28);
+    const maxThumbTop = trackH - thumbH;
+    const scrollRatio = scrollTop / (scrollH - clientH);
+    const thumbTop = Math.round(scrollRatio * maxThumbTop);
+
+    thumb.style.height = thumbH + 'px';
+    thumb.style.transform = `translateY(${thumbTop}px)`;
   }
 
-  function start() {
-    img.classList.add("is-animated");
-  }
-  function stop() {
-    img.classList.remove("is-animated");
+  // update on load + resize + scroll
+  window.addEventListener('load', updateThumb, { passive: true });
+  window.addEventListener('resize', updateThumb);
+  window.addEventListener('scroll', updateThumb, { passive: true });
+
+  // dragging support
+  let dragging = false;
+  let dragStartY = 0;
+  let startThumbTop = 0;
+
+  thumb.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    dragging = true;
+    thumb.setPointerCapture(e.pointerId);
+    dragStartY = e.clientY;
+    // compute current top from transform
+    const matrix = window.getComputedStyle(thumb).transform;
+    let currentTop = 0;
+    if (matrix && matrix !== 'none') {
+      const vals = matrix.match(/matrix.*\((.+)\)/)[1].split(', ');
+      currentTop = parseFloat(vals[5]); // translateY
+    } else {
+      currentTop = 0;
+    }
+    startThumbTop = currentTop;
+    thumb.style.transition = 'none';
+  });
+
+  thumb.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    e.preventDefault();
+    const deltaY = e.clientY - dragStartY;
+    const trackH = track.clientHeight;
+    const thumbH = thumb.clientHeight;
+    const maxTop = trackH - thumbH;
+    let newTop = startThumbTop + deltaY;
+    newTop = Math.max(0, Math.min(maxTop, newTop));
+
+    // update visual
+    thumb.style.transform = `translateY(${newTop}px)`;
+
+    // map thumb position to page scroll
+    const doc = document.documentElement;
+    const clientH = window.innerHeight || doc.clientHeight;
+    const scrollH = Math.max(doc.scrollHeight || document.body.scrollHeight, document.body.scrollHeight);
+    const scrollRatio = newTop / maxTop;
+    const newScrollTop = Math.round(scrollRatio * (scrollH - clientH));
+    window.scrollTo({ top: newScrollTop, behavior: 'auto' });
+  });
+
+  function endDrag(e) {
+    if (!dragging) return;
+    dragging = false;
+    try { thumb.releasePointerCapture && thumb.releasePointerCapture(e && e.pointerId); } catch (err) {}
+    thumb.style.transition = '';
   }
 
-  if ("IntersectionObserver" in window) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting && e.intersectionRatio > 0.25) start();
-          else stop();
-        });
-      },
-      { threshold: [0, 0.25, 0.5, 1] }
-    );
-    io.observe(img);
-    // cleanup on unload
-    window.addEventListener("beforeunload", () => io.disconnect());
-  } else {
-    // fallback: always animate if observer not supported
-    start();
-  }
+  thumb.addEventListener('pointerup', endDrag);
+  thumb.addEventListener('pointercancel', endDrag);
+  // release globally in case pointer leaves thumb
+  window.addEventListener('pointerup', endDrag);
+
+  // click on track to jump
+  track.addEventListener('click', (e) => {
+    // ignore clicks that hit the thumb itself
+    if (e.target === thumb) return;
+    const rect = track.getBoundingClientRect();
+    const clickY = e.clientY - rect.top;
+    const thumbH = thumb.clientHeight;
+    const trackH = track.clientHeight;
+    const newTop = Math.max(0, Math.min(trackH - thumbH, clickY - thumbH / 2));
+    const doc = document.documentElement;
+    const clientH = window.innerHeight || doc.clientHeight;
+    const scrollH = Math.max(doc.scrollHeight || document.body.scrollHeight, document.body.scrollHeight);
+    const newScrollTop = Math.round((newTop / (trackH - thumbH)) * (scrollH - clientH));
+    window.scrollTo({ top: newScrollTop, behavior: 'smooth' });
+  });
+
+  // initial update
+  updateThumb();
+
+  // ensure thumb updates if content changes (images or fonts load)
+  const ro = new MutationObserver(updateThumb);
+  ro.observe(document.body, { childList: true, subtree: true, attributes: true });
 })();
 
-/* ================= Fallback: ensure discord animation runs =================
-   Appends .is-animated to any .discord-img if observer didn't add it.
-   Safe (idempotent) and respects reduced-motion via CSS media query.
+/* ---------------- Custom horizontal scrollbar for .services-tabs ----------------
+   - Injects a .custom-hscroll under each .services-tabs
+   - Syncs thumb width/position to scrollLeft
+   - Supports track click and pointer drag for smooth control
 */
-(function ensureDiscordAnimated() {
-  function apply() {
-    const imgs = document.querySelectorAll('.discord-img');
-    imgs.forEach(img => {
-      if (!img) {
-        return;
+(function customHScrollForTabs(){
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabContainers = Array.from(document.querySelectorAll('.services-tabs'));
+    if (!tabContainers.length) return;
+
+    tabContainers.forEach((tabs) => {
+      // create DOM
+      const wrapper = document.createElement('div');
+      wrapper.className = 'custom-hscroll';
+      wrapper.innerHTML = '<div class="track"><div class="thumb" aria-hidden="true"></div></div>';
+
+      // insert after the tabs container
+      tabs.parentNode.insertBefore(wrapper, tabs.nextSibling);
+
+      const track = wrapper.querySelector('.track');
+      const thumb = wrapper.querySelector('.thumb');
+
+      function updateThumb() {
+        const scrollWidth = tabs.scrollWidth;
+        const clientW = tabs.clientWidth;
+        if (scrollWidth <= clientW) {
+          // hide when no overflow
+          wrapper.style.display = 'none';
+          return;
+        } else {
+          wrapper.style.display = '';
+        }
+
+        const trackRect = track.getBoundingClientRect();
+        const trackW = trackRect.width;
+
+        // thumb width proportional to visible area
+        const thumbW = Math.max((clientW / scrollWidth) * trackW, 28);
+        const maxThumbLeft = trackW - thumbW;
+        const scrollRatio = tabs.scrollLeft / (scrollWidth - clientW);
+        const thumbLeft = Math.round(scrollRatio * maxThumbLeft);
+
+        thumb.style.width = thumbW + 'px';
+        thumb.style.transform = `translateY(-50%) translateX(${thumbLeft}px)`;
       }
-      if (!img.classList.contains('is-animated')) {
-        img.classList.add('is-animated');
-        // debug log — remove if you don't want console messages
-        console.log('[dr-laptop] forced .is-animated on .discord-img');
+
+      // scrolling within the tabs should update thumb
+      tabs.addEventListener('scroll', updateThumb, { passive: true });
+
+      // update on load and resize
+      window.addEventListener('load', updateThumb);
+      window.addEventListener('resize', updateThumb);
+
+      // pointer dragging
+      let dragging = false;
+      let startX = 0;
+      let startLeft = 0;
+
+      thumb.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        thumb.setPointerCapture(e.pointerId);
+        startX = e.clientX;
+        // read current translateX from transform
+        const matrix = window.getComputedStyle(thumb).transform;
+        startLeft = (matrix && matrix !== 'none') ? parseFloat(matrix.split(',')[4]) : 0;
+        thumb.style.transition = 'none';
+      });
+
+      thumb.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        e.preventDefault();
+        const dx = e.clientX - startX;
+        const trackW = track.clientWidth;
+        const thumbW = thumb.clientWidth;
+        const maxLeft = trackW - thumbW;
+        let newLeft = Math.max(0, Math.min(maxLeft, startLeft + dx));
+
+        // move thumb visually
+        thumb.style.transform = `translateY(-50%) translateX(${newLeft}px)`;
+
+        // sync tabs scroll
+        const scrollWidth = tabs.scrollWidth;
+        const clientW = tabs.clientWidth;
+        const scrollRatio = newLeft / (maxLeft || 1);
+        const newScrollLeft = Math.round(scrollRatio * (scrollWidth - clientW));
+        tabs.scrollLeft = newScrollLeft;
+      });
+
+      function endDrag(e) {
+        if (!dragging) return;
+        dragging = false;
+        try { thumb.releasePointerCapture && thumb.releasePointerCapture(e && e.pointerId); } catch (err) {}
+        thumb.style.transition = '';
       }
+
+      thumb.addEventListener('pointerup', endDrag);
+      thumb.addEventListener('pointercancel', endDrag);
+      window.addEventListener('pointerup', endDrag);
+
+      // click on track to jump
+      track.addEventListener('click', (e) => {
+        if (e.target === thumb) return;
+        const rect = track.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const thumbW = thumb.clientWidth;
+        const trackW = track.clientWidth;
+        const newLeft = Math.max(0, Math.min(trackW - thumbW, clickX - thumbW / 2));
+        const scrollWidth = tabs.scrollWidth;
+        const clientW = tabs.clientWidth;
+        const newScrollLeft = Math.round((newLeft / (trackW - thumbW)) * (scrollWidth - clientW));
+        tabs.scrollTo({ left: newScrollLeft, behavior: 'smooth' });
+      });
+
+      // initial update and observe for changes (font load or content changes)
+      updateThumb();
+      const mo = new MutationObserver(updateThumb);
+      mo.observe(tabs, { childList: true, subtree: true, characterData: true, attributes: true });
     });
-  }
-
-  if (document.readyState === 'loading') {
-    window.addEventListener('DOMContentLoaded', apply, { once: true });
-  } else {
-    apply();
-  }
-
-  // second attempt in case the image is injected/loaded late (OneDrive/slow file)
-  setTimeout(apply, 1000);
+  });
 })();
 
-/* ================= Manual rAF rotation + neon brightness loop for .discord-img
-   Fallback/guarantee: directly sets inline transform + filter every frame.
-   Respects prefers-reduced-motion.
-*/
-(function discordManualSpin() {
-  const img = document.querySelector('.discord-img');
-  if (!img) return;
+/* ---------------animation place holder controller----------------*/
 
-  // Respect reduced-motion preference
-  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) {
-    // ensure a baseline is present but do not animate
-    img.style.transform = 'rotate(0deg)';
-    img.style.transition = 'transform 160ms linear';
-    return;
+/* --------------- animation placeholder controller ---------------- */
+
+(function initServiceVideos() {
+  const videos = Array.from(
+    document.querySelectorAll('#service-animation video')
+  );
+
+  if (!videos.length) return;
+
+  let activeService = null;
+  const FADE_DURATION = 600;
+
+  function showVideo(video, interrupted) {
+    video.classList.remove("fade-out");
+
+    if (interrupted) {
+      video.classList.add("fade-in");
+    } else {
+      video.classList.remove("fade-in");
+    }
+
+    video.hidden = false;
+    video.currentTime = 0;
+    video.play().catch(() => {});
   }
 
-  // Controls
-  const LOOP_PERIOD_MS = 4200;    // full bright→dim→bright cycle (ms)
-  const BASE_ANGULAR_SPEED = 0.15; // base radians/sec (slow)
-  const SPEED_AMPLITUDE = 1.7;     // added when glow is dim (makes it much faster)
+  function hideVideo(video, interrupted) {
+    if (interrupted) {
+      video.classList.add("fade-out");
 
-  // We'll track a rotation angle in radians and update transform each frame
-  let angle = 0;
-  let last = performance.now();
-
-  // helper: ease in-out for smooth bright/dim shape
-  function easeInOut(t) {
-    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      setTimeout(() => {
+        video.pause();
+        video.currentTime = 0;
+        video.classList.remove("fade-out");
+        video.hidden = true;
+      }, FADE_DURATION);
+    } else {
+      video.pause();
+      video.currentTime = 0;
+      video.hidden = true;
+    }
   }
 
-  function frame(now) {
-    const dt = (now - last) / 1000; // seconds
-    last = now;
+  window.addEventListener("serviceChange", (e) => {
+    const nextService = e.detail.id;
+    if (nextService === activeService) return;
 
-    // phase in [0,1] repeating
-    const phase = ((now % LOOP_PERIOD_MS) / LOOP_PERIOD_MS); // 0..1
-    // brightness factor: 0 = dim, 1 = bright (we want brightness oscillation)
-    const bright = easeInOut( (Math.sin(phase * Math.PI * 2) + 1) / 2 );
+    const nextVideo = videos.find(
+      (v) => v.dataset.service === nextService
+    );
 
-    // map brightness -> angular speed (bright => slower, dim => faster)
-    // inverse mapping: speed = base + amplitude * (1 - bright)
-    const angularSpeed = BASE_ANGULAR_SPEED + SPEED_AMPLITUDE * (1 - bright); // radians/sec
+    const currentVideo = videos.find(
+      (v) => v.dataset.service === activeService
+    );
 
-    // update angle (radians)
-    angle += angularSpeed * dt * 3.14159; // scale so speed feels right; tweak if needed
+    const interrupted = Boolean(currentVideo && !currentVideo.paused);
 
-    // write transform (rotation + slight scale for life)
-    const deg = (angle * 180 / Math.PI) % 360;
-    const scale = 1 + 0.025 * (0.5 + 0.5 * Math.sin(phase * Math.PI * 2)); // tiny breathing
-    img.style.transform = `rotate(${deg}deg) scale(${scale})`;
+    if (currentVideo) {
+      hideVideo(currentVideo, interrupted);
+    }
 
-    // update filter to reflect neon brightness (stronger when bright)
-    // You can tune the rgba values to match your neon colors
-    const whiteInt = 0.6 + 0.9 * bright; // 0.6..1.5
-    const cyanInt  = 0.35 + 1.05 * bright; // 0.35..1.4
-    const purpleInt= 0.2 + 0.9 * bright; // 0.2..1.1
+    if (nextVideo) {
+      if (interrupted) {
+        setTimeout(() => showVideo(nextVideo, true), FADE_DURATION);
+      } else {
+        showVideo(nextVideo, false);
+      }
+    }
 
-    // set drop-shadow chain: inner white, outer cyan, outer purple
-    img.style.filter =
-      `drop-shadow(0 0 ${4 * whiteInt}px rgba(255,255,255,${0.9 * bright + 0.25})) ` +
-      `drop-shadow(0 0 ${8 * cyanInt}px rgba(0,200,255,${0.75 * bright + 0.12})) ` +
-      `drop-shadow(0 0 ${16 * purpleInt}px rgba(120,0,255,${0.45 * bright + 0.06}))`;
-
-    // schedule next frame
-    requestAnimationFrame(frame);
-  }
-
-  // start loop
-  last = performance.now();
-  requestAnimationFrame(frame);
+    activeService = nextService;
+  });
 })();
+
+
+/* --------------- animation fan controller ---------------- */
+
+(function initFanSequence() {
+  const intro = document.getElementById("fanIntroVideo");
+  const spin = document.getElementById("fanSpinVideo");
+
+  if (!intro || !spin) return;
+
+  // 🔁 loop ONLY the spin video
+  spin.loop = true;
+
+  // when intro ends, start spin
+  intro.addEventListener("ended", () => {
+    intro.pause();
+    intro.currentTime = 0;
+    intro.hidden = true;
+
+    spin.hidden = false;
+    spin.currentTime = 0;
+    spin.play().catch(() => {});
+  });
+
+  // when service switches away, stop both
+  window.addEventListener("serviceChange", (e) => {
+    if (e.detail.id !== "fan-cleaning") {
+      [intro, spin].forEach(v => {
+        v.pause();
+        v.currentTime = 0;
+        v.hidden = true;
+      });
+    }
+  });
+})();
+
+
+/* --------------- health pause point ---------------- */
+
+(function initHealthPausePoint() {
+  const healthVideo = document.querySelector(
+    '#service-animation video[data-service="health-check"]'
+  );
+  if (!healthVideo) return;
+
+  const PAUSE_TIME = 2.6; // seconds
+  let paused = false;
+
+  healthVideo.addEventListener("timeupdate", () => {
+    if (!paused && healthVideo.currentTime >= PAUSE_TIME) {
+      healthVideo.pause();
+      healthVideo.currentTime = PAUSE_TIME;
+      paused = true;
+    }
+  });
+
+  // reset when switching away
+  window.addEventListener("serviceChange", (e) => {
+    if (e.detail.id !== "health-check") {
+      paused = false;
+    }
+  });
+})();
+
+
+
+
+/* ---------------clear----------------*/
+
