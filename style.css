@@ -1270,4 +1270,73 @@ html {
 }
 
 
+
+
+
+
 /* end of stylesheet */
+
+/* --------after everything else --------- */
+
+/* ===============================
+   Page Loader
+   =============================== */
+
+#page-loader {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 20000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: opacity 0.6s ease;
+}
+
+#page-loader.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Loader circle */
+.loader-ring {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 0 8px rgba(255, 255, 255, 0.9),
+    0 0 18px rgba(255, 255, 255, 0.6),
+    0 0 32px rgba(255, 255, 255, 0.4);
+
+  animation: loaderBreath 1.8s ease-in-out infinite;
+}
+
+@keyframes loaderBreath {
+  0% {
+    transform: scale(0.9);
+    box-shadow:
+      0 0 4px rgba(255, 255, 255, 0.6),
+      0 0 10px rgba(255, 255, 255, 0.4),
+      0 0 18px rgba(255, 255, 255, 0.2);
+  }
+
+  50% {
+    transform: scale(1.05);
+    box-shadow:
+      0 0 10px rgba(255, 255, 255, 1),
+      0 0 24px rgba(255, 255, 255, 0.8),
+      0 0 40px rgba(255, 255, 255, 0.6);
+  }
+
+  100% {
+    transform: scale(0.9);
+    box-shadow:
+      0 0 4px rgba(255, 255, 255, 0.6),
+      0 0 10px rgba(255, 255, 255, 0.4),
+      0 0 18px rgba(255, 255, 255, 0.2);
+  }
+}

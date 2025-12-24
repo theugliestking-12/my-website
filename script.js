@@ -875,5 +875,29 @@ window.addEventListener("scroll", updateVignette);
 updateVignette();
 
 
+
+
+
+
 /* ---------------clear----------------*/
+ 
+// ------last block ---------
+
+// ===============================
+// Page Loader control
+// ===============================
+window.addEventListener("load", () => {
+  const loader = document.getElementById("page-loader");
+  if (!loader) return;
+
+  // short delay so the fade feels intentional
+  setTimeout(() => {
+    loader.classList.add("is-hidden");
+  }, 800);
+
+  // remove from DOM after fade-out
+  setTimeout(() => {
+    loader.remove();
+  }, 1200);
+});
 
