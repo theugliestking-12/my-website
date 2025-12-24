@@ -83,97 +83,110 @@
           <!-- Main area: full-width animation placeholder -->
           <div class="services-main">
             <div id="service-animation" class="animation-area" aria-hidden="true">
+              <div id="animation-loader" class="animation-loader">
+                <div class="loader-spinner"></div>
+              </div>
+
+              <video id="idleVideo" preload="auto" muted playsinline>
+                <source src="idle.mp4" type="video/mp4">
+              </video>
+
               <video id="healthVideo" data-service="health-check" preload="auto" muted playsinline>
                 <source src="cpu-gpu.mp4" type="video/mp4">
               </video>
 
-              <video id="ramVideo" data-service="ram" preload="auto" muted playsinline hidden>
+              <video id="ramVideo" data-service="ram" preload="auto" muted playsinline>
                 <source src="ram.mp4" type="video/mp4">
               </video>
 
-              <video id="storageVideo" data-service="storage" preload="auto" muted playsinline hidden>
+              <video id="storageVideo" data-service="storage" preload="auto" muted playsinline>
                 <source src="storage.mp4" type="video/mp4">
               </video>
-              <video id="fanIntroVideo" data-service="fan-cleaning" data-step="intro" preload="auto" muted playsinline
-                hidden>
+
+              <video id="fanIntroVideo" data-service="fan-cleaning" data-step="intro" preload="auto" muted playsinline>
                 <source src="fan-move.mp4" type="video/mp4">
               </video>
 
-              <video id="fanSpinVideo" data-service="fan-cleaning" data-step="spin" preload="auto" muted playsinline
-                hidden>
+              <video id="fanSpinVideo" data-service="fan-cleaning" data-step="spin" preload="auto" muted playsinline>
                 <source src="fan-spin.mp4" type="video/mp4">
               </video>
 
-            </div>
+              <video id="othersVideo" data-service="others" preload="auto" muted playsinline loop>
+                <source src="others-idle.mp4" type="video/mp4">
+              </video>
 
-
-            <!-- detail panels -->
-            <div class="service-details" aria-live="polite">
-              <article id="panel-1" class="service-panel" role="tabpanel" aria-labelledby="tab-1"
-                data-service="health-check" tabindex="-1">
-                <h3 class="service-title">Health Checkup</h3>
-                <p class="service-summary">
-                  Understand your laptop’s current health — slowness, heating, battery issues, and overall performance.
-                </p>
-                <p class="service-desc">
-                  During the call, we'll guide you step-by-step to check temperatures, storage health, background
-                  activity, and performance issues. Based on the results, we'll explain what you can fix at home and
-                  what requires a technician referral.
-                </p>
-              </article>
-
-              <article id="panel-2" class="service-panel" role="tabpanel" aria-labelledby="tab-2"
-                data-service="fan-cleaning" hidden tabindex="-1">
-                <h3 class="service-title">Basic Fan Cleaning</h3>
-                <p class="service-summary">
-                  Dust buildup blocking airflow? We guide you through cleaning your fans safely at home.
-                </p>
-                <p class="service-desc">
-                  If your laptop is overheating or noisy due to clogged fans, we’ll walk you through a careful, safe
-                  cleaning procedure over a call — no expensive tools required. Ideal if you want to learn and do it
-                  yourself.
-                </p>
-              </article>
-
-              <article id="panel-3" class="service-panel" role="tabpanel" aria-labelledby="tab-3" data-service="ram"
-                hidden tabindex="-1">
-                <h3 class="service-title">Upgrading RAM / Storage</h3>
-                <p class="service-summary">
-                  Don’t waste money buying the wrong RAM or SSD — let us help you choose the right one.
-                </p>
-                <p class="service-desc">
-                  We’ll help you check compatibility and guide you toward the correct upgrade options for your laptop so
-                  you don’t guess.
-                </p>
-              </article>
-
-              <article id="panel-4" class="service-panel" role="tabpanel" aria-labelledby="tab-4"
-                data-service="buying-advice" hidden tabindex="-1">
-                <h3 class="service-title">Advice on Buying a Laptop</h3>
-                <p class="service-summary">
-                  Get personalized guidance on which laptop fits your needs, budget, and long-term use.
-                </p>
-                <p class="service-desc">
-                  During the call we’ll help you match the right laptop to your use-case and show you what to check
-                  before
-                  buying so you don’t get fooled by specs-speak.
-                </p>
-              </article>
-
-              <article id="panel-5" class="service-panel" role="tabpanel" aria-labelledby="tab-5" data-service="others"
-                hidden tabindex="-1">
-                <h3 class="service-title">Others</h3>
-                <p class="service-summary">
-                  Have a different request? Contact us on Discord and I’ll let you know if I can help.
-                </p>
-                <p class="service-desc">
-                  Message with the issue on Discord; if it's something we can guide you through online, we’ll arrange a
-                  call.
-                </p>
-              </article>
             </div>
           </div>
+
+
+
+          <!-- detail panels -->
+          <div class="service-details" aria-live="polite">
+            <article id="panel-1" class="service-panel" role="tabpanel" aria-labelledby="tab-1"
+              data-service="health-check" tabindex="-1">
+              <h3 class="service-title">Health Checkup</h3>
+              <p class="service-summary">
+                Understand your laptop’s current health — slowness, heating, battery issues, and overall performance.
+              </p>
+              <p class="service-desc">
+                During the call, we'll guide you step-by-step to check temperatures, storage health, background
+                activity, and performance issues. Based on the results, we'll explain what you can fix at home and
+                what requires a technician referral.
+              </p>
+            </article>
+
+            <article id="panel-2" class="service-panel" role="tabpanel" aria-labelledby="tab-2"
+              data-service="fan-cleaning" hidden tabindex="-1">
+              <h3 class="service-title">Basic Fan Cleaning</h3>
+              <p class="service-summary">
+                Dust buildup blocking airflow? We guide you through cleaning your fans safely at home.
+              </p>
+              <p class="service-desc">
+                If your laptop is overheating or noisy due to clogged fans, we’ll walk you through a careful, safe
+                cleaning procedure over a call — no expensive tools required. Ideal if you want to learn and do it
+                yourself.
+              </p>
+            </article>
+
+            <article id="panel-3" class="service-panel" role="tabpanel" aria-labelledby="tab-3" data-service="ram"
+              hidden tabindex="-1">
+              <h3 class="service-title">Upgrading RAM / Storage</h3>
+              <p class="service-summary">
+                Don’t waste money buying the wrong RAM or SSD — let us help you choose the right one.
+              </p>
+              <p class="service-desc">
+                We’ll help you check compatibility and guide you toward the correct upgrade options for your laptop so
+                you don’t guess.
+              </p>
+            </article>
+
+            <article id="panel-4" class="service-panel" role="tabpanel" aria-labelledby="tab-4"
+              data-service="buying-advice" hidden tabindex="-1">
+              <h3 class="service-title">Advice on Buying a Laptop</h3>
+              <p class="service-summary">
+                Get personalized guidance on which laptop fits your needs, budget, and long-term use.
+              </p>
+              <p class="service-desc">
+                During the call we’ll help you match the right laptop to your use-case and show you what to check
+                before
+                buying so you don’t get fooled by specs-speak.
+              </p>
+            </article>
+
+            <article id="panel-5" class="service-panel" role="tabpanel" aria-labelledby="tab-5" data-service="others"
+              hidden tabindex="-1">
+              <h3 class="service-title">Others</h3>
+              <p class="service-summary">
+                Have a different request? Contact us on Discord and I’ll let you know if I can help.
+              </p>
+              <p class="service-desc">
+                Message with the issue on Discord; if it's something we can guide you through online, we’ll arrange a
+                call.
+              </p>
+            </article>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 

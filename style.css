@@ -192,7 +192,7 @@ body {
 /* separator between Services heading and tabs */
 .services-separator {
   width: 800px;
-  max-width: 86%;
+  max-width: 100%;
   height: 2px;
   margin: 10px auto 18px;
   border-radius: 12px;
@@ -204,18 +204,18 @@ body {
    */
 }
 
-@media (max-width: 640px) {
+/* @media (max-width: 640px) {
   .services-separator {
     height: 12px;
     border-radius: 10px;
     margin: 8px auto 14px;
   }
-}
+} */
 
 /* Separator for About section */
 .about-separator {
   width: 800px;
-  max-width: 86%;
+  max-width: 100%;
   height: 2px;
   margin: 25px auto 30px;
   border-radius: 12px;
@@ -226,7 +226,7 @@ body {
 /* Separator for Contact section */
 .contact-separator {
   width: 800px;
-  max-width: 86%;
+  max-width: 100%;
   height: 2px;
   margin: 25px auto 30px;
   border-radius: 12px;
@@ -298,7 +298,9 @@ body {
 
 /* =============== Animation placeholder =============== */
 .animation-area {
+  position: relative; 
   width: 100%;
+  /* max-width: 60%;        👈 20% smaller */
   aspect-ratio: 16 / 9;          /* forces 16:9 */
   background: transparent;
 
@@ -311,16 +313,81 @@ body {
   overflow: hidden;              /* IMPORTANT for future animations */
 }
 
+/* =============== Loader Styling  =============== */
+.animation-area {
+  position: relative;
+}
+
+/* loader overlay */
+.animation-loader {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 5;
+}
+
+.animation-loader.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+/* simple spinner */
+.loader-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
 /* =============== Service ani place holder fade  =============== */
 
+/* =============== Service animation visibility control =============== */
+
 .animation-area video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: inherit;
-  opacity: 1;
+
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+
   transition: opacity 0.6s ease;
 }
+
+/* visible video */
+.animation-area video.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+/* ensure idle video occupies the same space */
+#idleVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
 
 /* fade states (used ONLY on skip) */
 .animation-area video.fade-out {
@@ -509,7 +576,13 @@ body {
   width: 100%;
   z-index: 1100;
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow:
+    0 4px 6px rgba(255, 255, 255, 0.778),
+    0 8px 12px rgba(255, 255, 255, 0.208),
+    0 12px 24px rgba(255, 255, 255, 0.15);
+
 }
+
 
 .nav-inner {
   max-width: 1100px;
@@ -1024,6 +1097,63 @@ html {
 @media (max-width: 640px) {
   .custom-hscroll { display: none; }
 }
+
+/* =============== Idle Animation Fade =============== */
+#idleVideo.fade-in {
+  animation: idleFadeIn 0.6s ease forwards;
+}
+
+#idleVideo.fade-out {
+  animation: idleFadeOut 0.6s ease forwards;
+}
+
+@keyframes idleFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes idleFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+.animation-area {
+  position: relative;
+  border: 2px solid #ffffff;
+  border-radius: 16px;
+
+  /* static neon glow OUTSIDE the border */
+  box-shadow:
+    0 0 8px rgb(254, 254, 254),
+    0 0 16px rgb(240, 255, 253),
+    0 0 32px rgb(213, 239, 255);
+  animation: neonBreath 2.25s ease-in-out infinite;
+}
+
+@keyframes neonBreath {
+  0% {
+    box-shadow:
+      0 0 2px rgb(255, 255, 255),
+      0 0 3px rgb(255, 255, 255),
+      0 0 5px rgb(255, 255, 255);
+  }
+
+  50% {
+    box-shadow:
+      0 0 9px rgb(255, 255, 255),
+      0 0 18px rgb(255, 255, 255),
+      0 0 27px rgba(255, 255, 255);
+  }
+
+  100% {
+    box-shadow:
+      0 0 2px rgba(255, 255, 255),
+      0 0 3px rgba(255, 255, 255),
+      0 0 5px rgba(255, 255, 255);
+  }
+}
+
+
 
 
 

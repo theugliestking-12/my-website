@@ -313,7 +313,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function endDrag(e) {
     if (!dragging) return;
     dragging = false;
-    try { thumb.releasePointerCapture && thumb.releasePointerCapture(e && e.pointerId); } catch (err) {}
+    try { thumb.releasePointerCapture && thumb.releasePointerCapture(e && e.pointerId); } catch (err) { }
     thumb.style.transition = '';
   }
 
@@ -351,7 +351,7 @@ document.addEventListener("DOMContentLoaded", () => {
    - Syncs thumb width/position to scrollLeft
    - Supports track click and pointer drag for smooth control
 */
-(function customHScrollForTabs(){
+(function customHScrollForTabs() {
   document.addEventListener('DOMContentLoaded', () => {
     const tabContainers = Array.from(document.querySelectorAll('.services-tabs'));
     if (!tabContainers.length) return;
@@ -437,7 +437,7 @@ document.addEventListener("DOMContentLoaded", () => {
       function endDrag(e) {
         if (!dragging) return;
         dragging = false;
-        try { thumb.releasePointerCapture && thumb.releasePointerCapture(e && e.pointerId); } catch (err) {}
+        try { thumb.releasePointerCapture && thumb.releasePointerCapture(e && e.pointerId); } catch (err) { }
         thumb.style.transition = '';
       }
 
@@ -472,78 +472,238 @@ document.addEventListener("DOMContentLoaded", () => {
 /* --------------- animation placeholder controller ---------------- */
 
 (function initServiceVideos() {
+  const idleVideo = document.getElementById("idleVideo");
+  if (idleVideo) idleVideo.loop = true;
+
+
   const videos = Array.from(
-    document.querySelectorAll('#service-animation video')
+    document.querySelectorAll("#service-animation video[data-service]")
   );
+
 
   if (!videos.length) return;
 
   let activeService = null;
-  const FADE_DURATION = 600;
 
-  function showVideo(video, interrupted) {
-    video.classList.remove("fade-out");
-
-    if (interrupted) {
-      video.classList.add("fade-in");
-    } else {
-      video.classList.remove("fade-in");
+  function showVideo(video) {
+    // hide idle
+    if (idleVideo) {
+      idleVideo.pause();
+      idleVideo.classList.remove("is-visible");
     }
 
-    video.hidden = false;
+    video.classList.add("is-visible");
     video.currentTime = 0;
-    video.play().catch(() => {});
+    video.play().catch(() => { });
   }
 
-  function hideVideo(video, interrupted) {
-    if (interrupted) {
-      video.classList.add("fade-out");
+  function showIdle() {
+    if (!idleVideo) return;
 
-      setTimeout(() => {
-        video.pause();
-        video.currentTime = 0;
-        video.classList.remove("fade-out");
-        video.hidden = true;
-      }, FADE_DURATION);
-    } else {
-      video.pause();
-      video.currentTime = 0;
-      video.hidden = true;
-    }
+ // hide all service videos (hide FIRST)
+videos.forEach(v => {
+  v.classList.remove("is-visible");
+});
+
+// reset AFTER hide
+setTimeout(() => {
+  videos.forEach(v => {
+    v.pause();
+    v.currentTime = 0;
+  });
+}, 0);
+
+
+    activeService = null;
+    idleVideo.classList.add("is-visible");
+    idleVideo.currentTime = 0;
+    idleVideo.play().catch(() => { });
   }
 
   window.addEventListener("serviceChange", (e) => {
+    if (!window.__animationsReady) return;
+
     const nextService = e.detail.id;
-    if (nextService === activeService) return;
 
-    const nextVideo = videos.find(
-      (v) => v.dataset.service === nextService
-    );
-
-    const currentVideo = videos.find(
-      (v) => v.dataset.service === activeService
-    );
-
-    const interrupted = Boolean(currentVideo && !currentVideo.paused);
-
-    if (currentVideo) {
-      hideVideo(currentVideo, interrupted);
+    // clicking active tab again → idle
+    if (nextService === activeService) {
+      showIdle();
+      return;
     }
+
+    // reset everything first
+    videos.forEach(v => {
+      v.pause();
+      v.currentTime = 0;
+      v.classList.remove("is-visible");
+    });
+
+    if (!nextService) {
+      showIdle();
+      return;
+    }
+
+    const nextVideo = videos.find(v => v.dataset.service === nextService);
 
     if (nextVideo) {
-      if (interrupted) {
-        setTimeout(() => showVideo(nextVideo, true), FADE_DURATION);
-      } else {
-        showVideo(nextVideo, false);
-      }
+      activeService = nextService;
+      showVideo(nextVideo);
+    } else {
+      showIdle();
     }
-
-    activeService = nextService;
   });
+
+  // show idle ONLY after animations are ready
+  const wait = setInterval(() => {
+    if (!window.__animationsReady) return;
+    clearInterval(wait);
+    showIdle();
+  }, 50);
+
 })();
 
 
+
+
+
 /* --------------- animation fan controller ---------------- */
+
+// (function initFanSequence() {
+//   const intro = document.getElementById("fanIntroVideo");
+//   const spin = document.getElementById("fanSpinVideo");
+
+//   if (!intro || !spin) return;
+
+//   // 🔁 loop ONLY the spin video
+//   spin.loop = true;
+
+//   // when intro ends, start spin
+//   intro.addEventListener("ended", () => {
+//     intro.pause();
+//     intro.currentTime = 0;
+//     intro.hidden = true;
+
+//     spin.hidden = false;
+//     spin.currentTime = 0;
+//     spin.play().catch(() => { });
+//   });
+
+//   // when service switches away, stop both
+//   window.addEventListener("serviceChange", (e) => {
+//     if (e.detail.id !== "fan-cleaning") {
+//       [intro, spin].forEach(v => {
+//         v.pause();
+//         v.currentTime = 0;
+//         v.hidden = true;
+//       });
+//     }
+//   });
+// })();
+
+
+/* --------------- health pause point ---------------- */
+
+// (function initHealthPausePoint() {
+//   const healthVideo = document.querySelector(
+//     '#service-animation video[data-service="health-check"]'
+//   );
+//   if (!healthVideo) return;
+
+//   const PAUSE_TIME = 2.6; // seconds
+//   let paused = false;
+
+//   healthVideo.addEventListener("timeupdate", () => {
+//     if (!paused && healthVideo.currentTime >= PAUSE_TIME) {
+//       healthVideo.pause();
+//       healthVideo.currentTime = PAUSE_TIME;
+//       paused = true;
+//     }
+//   });
+
+// reset when switching away
+//   window.addEventListener("serviceChange", (e) => {
+//     if (e.detail.id !== "health-check") {
+//       paused = false;
+//     }
+//   });
+// })();
+
+
+/* --------------- animation asset loader ---------------- */
+
+(function initAnimationAssetLoader() {
+  const videos = Array.from(
+    document.querySelectorAll('#service-animation video')
+  );
+  const loader = document.getElementById("animation-loader");
+
+  if (!videos.length || !loader) return;
+
+  let loadedCount = 0;
+  const total = videos.length;
+
+  function onVideoReady() {
+    loadedCount++;
+    if (loadedCount >= total) {
+      loader.classList.add("hidden");
+      window.__animationsReady = true;
+
+    }
+  }
+
+
+
+  videos.forEach(video => {
+    // ensure preload
+    video.preload = "auto";
+
+    if (video.readyState >= 2) {
+      onVideoReady();
+    } else {
+      video.addEventListener("loadeddata", onVideoReady, { once: true });
+      video.addEventListener("error", onVideoReady, { once: true });
+    }
+  });
+})();
+
+/* --------------- video bootstrap (one-time) ---------------- */
+(function initVideoBootstrap() {
+  window.addEventListener("load", () => {
+    const healthVideo = document.querySelector(
+      '#service-animation video[data-service="health-check"]'
+    );
+    const idleVideo = document.getElementById("idleVideo");
+
+    if (!healthVideo || !idleVideo) return;
+
+    // wait until animations are unlocked
+    const wait = setInterval(() => {
+      if (!window.__animationsReady) return;
+
+      clearInterval(wait);
+
+      // silently initialize health video
+      healthVideo.muted = true;
+      healthVideo.play().then(() => {
+        healthVideo.pause();
+        healthVideo.currentTime = 0;
+        // healthVideo.hidden = true;
+
+        // ensure idle is visible
+        idleVideo.hidden = false;
+        idleVideo.play().catch(() => { });
+      }).catch(() => {
+        // even if play fails, keep idle running
+        idleVideo.hidden = false;
+        idleVideo.play().catch(() => { });
+      });
+
+    }, 50);
+  });
+})();
+
+/* --------------- fan intro → spin controller ---------------- */
+let fanIntroCompletedNaturally = false;
 
 (function initFanSequence() {
   const intro = document.getElementById("fanIntroVideo");
@@ -551,60 +711,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!intro || !spin) return;
 
-  // 🔁 loop ONLY the spin video
+  // spin should loop
   spin.loop = true;
 
-  // when intro ends, start spin
-  intro.addEventListener("ended", () => {
-    intro.pause();
-    intro.currentTime = 0;
-    intro.hidden = true;
+  intro.addEventListener("timeupdate", () => {
+    if (intro.duration && intro.currentTime >= intro.duration - 0.05) {
+      // stop intro BEFORE last frame paints
+      intro.addEventListener("timeupdate", () => {
+  if (intro.duration && intro.currentTime >= intro.duration - 0.05) {
 
-    spin.hidden = false;
-    spin.currentTime = 0;
-    spin.play().catch(() => {});
+    // JUST hide intro — do NOT reset it
+    intro.classList.remove("is-visible");
+
+    // spin is already playing / visible logic handled elsewhere
+  }
+});
+
+      intro.classList.remove("is-visible");
+
+      // prepare spin
+      spin.currentTime = 0;
+
+      // start playback FIRST (while still hidden)
+      spin.play().catch(() => { });
+
+      // make visible on next frame so motion is already happening
+      requestAnimationFrame(() => {
+        spin.classList.add("is-visible");
+      });
+
+    }
   });
 
-  // when service switches away, stop both
+
+  // when switching away from fan service, stop both
   window.addEventListener("serviceChange", (e) => {
     if (e.detail.id !== "fan-cleaning") {
       [intro, spin].forEach(v => {
         v.pause();
         v.currentTime = 0;
-        v.hidden = true;
+        v.classList.remove("is-visible");
       });
     }
   });
 })();
-
-
-/* --------------- health pause point ---------------- */
-
-(function initHealthPausePoint() {
-  const healthVideo = document.querySelector(
-    '#service-animation video[data-service="health-check"]'
-  );
-  if (!healthVideo) return;
-
-  const PAUSE_TIME = 2.6; // seconds
-  let paused = false;
-
-  healthVideo.addEventListener("timeupdate", () => {
-    if (!paused && healthVideo.currentTime >= PAUSE_TIME) {
-      healthVideo.pause();
-      healthVideo.currentTime = PAUSE_TIME;
-      paused = true;
-    }
-  });
-
-  // reset when switching away
-  window.addEventListener("serviceChange", (e) => {
-    if (e.detail.id !== "health-check") {
-      paused = false;
-    }
-  });
-})();
-
 
 
 
