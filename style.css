@@ -1153,8 +1153,121 @@ html {
   }
 }
 
+/* Water ripple overlay (transparent, non-interactive) */
+#water-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  pointer-events: none;
+  background: transparent;
+}
 
 
+* {
+  cursor: none !important;
+}
+
+/* Custom circular cursor */
+#custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  
+
+  background: #ffffff; /* fill the center */
+  border: 2px solid rgb(0, 0, 0);
+  box-shadow:
+    0 0 10px rgba(47, 255, 255, 0.7),
+    0 0 20px rgba(47, 225, 255, 0.4);
+
+  pointer-events: none;
+  z-index: 10000;
+
+  transform: translate(-50%, -50%);
+  transition: transform 0.08s ease-out;
+}
+
+@media (pointer: coarse) {
+  * {
+    cursor: auto !important;
+  }
+
+  #custom-cursor {
+    display: none;
+  }
+}
+
+/* Cursor hidden state (pop out) */
+#custom-cursor.is-hidden {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.3);
+}
+
+/* ===============================
+   Global subtle haze
+   =============================== */
+html {
+  filter: blur(0.2px) brightness(1.02);
+}
+
+/* ===============================
+   Custom text selection
+   =============================== */
+::selection {
+  background: #ffffff;  /* selection highlight */
+  color: #000000;       /* selected text color */
+}
+
+::-moz-selection {
+  background: #ffffff;
+  color: #000000;
+}
+
+/* Prevent selection on Discord icon */
+.discord-glow-wrapper,
+.discord-glow-wrapper img {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.discord-glow-wrapper img {
+  pointer-events: none;
+}
+
+/* ===============================
+   Scroll vignette overlay
+   =============================== */
+.scroll-vignette {
+  position: fixed;
+  top: 65px;          /* height of navbar */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 100; /* below cursor, above content */
+
+  --top-strength: 0;
+  --bottom-strength: 1;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, var(--top-strength)) 0%,
+      transparent 20%
+    ),
+    linear-gradient(
+      to top,
+      rgba(0, 0, 0, var(--bottom-strength)) 0%,
+      transparent 20%
+    );
+}
 
 
 /* end of stylesheet */

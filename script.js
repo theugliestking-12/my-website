@@ -500,18 +500,18 @@ document.addEventListener("DOMContentLoaded", () => {
   function showIdle() {
     if (!idleVideo) return;
 
- // hide all service videos (hide FIRST)
-videos.forEach(v => {
-  v.classList.remove("is-visible");
-});
+    // hide all service videos (hide FIRST)
+    videos.forEach(v => {
+      v.classList.remove("is-visible");
+    });
 
-// reset AFTER hide
-setTimeout(() => {
-  videos.forEach(v => {
-    v.pause();
-    v.currentTime = 0;
-  });
-}, 0);
+    // reset AFTER hide
+    setTimeout(() => {
+      videos.forEach(v => {
+        v.pause();
+        v.currentTime = 0;
+      });
+    }, 0);
 
 
     activeService = null;
@@ -718,14 +718,14 @@ let fanIntroCompletedNaturally = false;
     if (intro.duration && intro.currentTime >= intro.duration - 0.05) {
       // stop intro BEFORE last frame paints
       intro.addEventListener("timeupdate", () => {
-  if (intro.duration && intro.currentTime >= intro.duration - 0.05) {
+        if (intro.duration && intro.currentTime >= intro.duration - 0.05) {
 
-    // JUST hide intro — do NOT reset it
-    intro.classList.remove("is-visible");
+          // JUST hide intro — do NOT reset it
+          intro.classList.remove("is-visible");
 
-    // spin is already playing / visible logic handled elsewhere
-  }
-});
+          // spin is already playing / visible logic handled elsewhere
+        }
+      });
 
       intro.classList.remove("is-visible");
 
@@ -756,6 +756,123 @@ let fanIntroCompletedNaturally = false;
   });
 })();
 
+// Water overlay setup (Phase 1)
+const waterCanvas = document.getElementById("water-overlay");
+const waterCtx = waterCanvas.getContext("2d");
+
+function resizeWaterCanvas() {
+  waterCanvas.width = window.innerWidth;
+  waterCanvas.height = window.innerHeight;
+}
+
+window.addEventListener("resize", resizeWaterCanvas);
+resizeWaterCanvas();
+
+
+// Ripple system (Phase 2)
+let lastRippleTime = 0;
+const RIPPLE_INTERVAL = 20; // ms (you can tweak later)
+
+const ripples = [];
+
+function createRipple(x, y) {
+  ripples.push({
+    x,
+    y,
+    radius: 0,
+    alpha: 0.5,      // subtle
+    speed: 0.8        // expansion speed
+  });
+}
+
+window.addEventListener("mousemove", (e) => {
+  const now = performance.now();
+
+  if (now - lastRippleTime < RIPPLE_INTERVAL) return;
+
+  lastRippleTime = now;
+  createRipple(e.clientX, e.clientY);
+});
+
+function drawRipples() {
+  waterCtx.clearRect(0, 0, waterCanvas.width, waterCanvas.height);
+
+  for (let i = ripples.length - 1; i >= 0; i--) {
+    const r = ripples[i];
+
+    // subtle bloom (glow)
+    waterCtx.shadowColor = "rgba(255, 255, 255, 1)";
+    waterCtx.shadowBlur = 5;
+
+
+    // highlight ring
+    waterCtx.beginPath();
+    waterCtx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+    waterCtx.strokeStyle = `rgba(255, 255, 255, ${r.alpha})`;
+    waterCtx.lineWidth = 1;
+    waterCtx.stroke();
+
+    // shadow ring (slightly offset for refraction illusion)
+    waterCtx.beginPath();
+    waterCtx.arc(r.x, r.y, r.radius + 2, 0, Math.PI * 2);
+    waterCtx.strokeStyle = `rgba(0, 0, 0, ${r.alpha * 0.6})`;
+    waterCtx.lineWidth = 1;
+    waterCtx.stroke();
+
+    // reset bloom so it doesn't affect next frame
+    waterCtx.shadowBlur = 0;
+
+
+
+    // update ripple
+    r.radius += r.speed;
+    r.alpha -= 0.005;
+
+    // remove when invisible
+    if (r.alpha <= 0) {
+      ripples.splice(i, 1);
+    }
+  }
+
+  requestAnimationFrame(drawRipples);
+}
+
+drawRipples();
+
+
+const cursor = document.getElementById("custom-cursor");
+
+window.addEventListener("mousemove", (e) => {
+  cursor.style.left = e.clientX + "px";
+  cursor.style.top = e.clientY + "px";
+});
+
+// Pop out when leaving the browser window
+window.addEventListener("mouseleave", () => {
+  cursor.classList.add("is-hidden");
+});
+
+// Pop back in when re-entering
+window.addEventListener("mouseenter", () => {
+  cursor.classList.remove("is-hidden");
+});
+
+// Scroll-based vignette control
+const vignette = document.querySelector(".scroll-vignette");
+
+function updateVignette() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+  const topStrength = Math.min(scrollTop / 150, 0.9);
+  const bottomStrength = Math.min((docHeight - scrollTop) / 150, 0.9);
+
+  vignette.style.setProperty("--top-strength", topStrength.toFixed(2));
+  vignette.style.setProperty("--bottom-strength", bottomStrength.toFixed(2));
+}
+
+window.addEventListener("scroll", updateVignette);
+updateVignette();
 
 
 /* ---------------clear----------------*/
