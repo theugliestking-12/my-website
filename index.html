@@ -16,8 +16,21 @@
 <div id="custom-cursor"></div>
 <div class="scroll-vignette"></div>
 
+<!-- Background music -->
+<audio id="bg-music" loop preload="auto">
+  <source src="bg-music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Click sound -->
+<audio id="click-sound" preload="auto">
+  <source src="click.wav" type="audio/wav">
+</audio>
+
+
 
 <body>
+  <div id="ambient-ripple"></div>
+
   <!-- skip link for keyboard users -->
   <a class="skip-link" href="#main" style="position:absolute;left:-9999px;">Skip to content</a>
 
@@ -26,16 +39,23 @@
       <!-- SIMPLE TEXT LOGO -->
       <a class="logo" href="#main">Dr. Laptop</a>
 
-      <ul class="nav-links" id="primary-nav" role="menu">
-        <li role="none"><a role="menuitem" href="#main">Home</a></li>
-        <li role="none"><a role="menuitem" href="#services-section">Services</a></li>
-        <li role="none"><a role="menuitem" href="#about-section">About</a></li>
-        <li role="none"><a role="menuitem" href="#contact-section">Contact</a></li>
-      </ul>
+      <div class="nav-menu">
+        <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"></button>
 
-      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+        <ul class="nav-links" id="primary-nav" role="menu">
+          <li role="none"><a role="menuitem" href="#main">Home</a></li>
+          <li role="none"><a role="menuitem" href="#services-section">Services</a></li>
+          <li role="none"><a role="menuitem" href="#about-section">About</a></li>
+          <li role="none"><a role="menuitem" href="#contact-section">Contact</a></li>
+        </ul>
+      </div>
+
+
+
     </div>
   </nav>
+
+
 
   <main id="main" tabindex="-1">
     <!-- =============== HERO =============== -->
@@ -92,31 +112,33 @@
                 <div class="loader-spinner"></div>
               </div>
 
-              <video id="idleVideo" preload="auto" muted playsinline>
+              <video id="idleVideo" preload="auto" muted playsinline draggable="false">
                 <source src="idle.mp4" type="video/mp4">
               </video>
 
-              <video id="healthVideo" data-service="health-check" preload="auto" muted playsinline>
+              <video id="healthVideo" data-service="health-check" preload="auto" muted playsinline draggable="false">
                 <source src="cpu-gpu.mp4" type="video/mp4">
               </video>
 
-              <video id="ramVideo" data-service="ram" preload="auto" muted playsinline>
+              <video id="ramVideo" data-service="ram" preload="auto" muted playsinline draggable="false">
                 <source src="ram.mp4" type="video/mp4">
               </video>
 
-              <video id="storageVideo" data-service="storage" preload="auto" muted playsinline>
+              <video id="storageVideo" data-service="storage" preload="auto" muted playsinline draggable="false">
                 <source src="storage.mp4" type="video/mp4">
               </video>
 
-              <video id="fanIntroVideo" data-service="fan-cleaning" data-step="intro" preload="auto" muted playsinline>
+              <video id="fanIntroVideo" data-service="fan-cleaning" data-step="intro" preload="auto" muted playsinline
+                draggable="false">
                 <source src="fan-move.mp4" type="video/mp4">
               </video>
 
-              <video id="fanSpinVideo" data-service="fan-cleaning" data-step="spin" preload="auto" muted playsinline>
+              <video id="fanSpinVideo" data-service="fan-cleaning" data-step="spin" preload="auto" muted playsinline
+                draggable="false">
                 <source src="fan-spin.mp4" type="video/mp4">
               </video>
 
-              <video id="othersVideo" data-service="others" preload="auto" muted playsinline loop>
+              <video id="othersVideo" data-service="others" preload="auto" muted playsinline loop draggable="false">
                 <source src="others-idle.mp4" type="video/mp4">
               </video>
 

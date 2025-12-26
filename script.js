@@ -756,6 +756,13 @@ let fanIntroCompletedNaturally = false;
   });
 })();
 
+// optimization for low end  by completely removing riplle effects .
+const isLowEndDevice =
+  navigator.hardwareConcurrency <= 4 ||
+  navigator.deviceMemory <= 4;
+
+if (!isLowEndDevice) {
+
 // Water overlay setup (Phase 1)
 const waterCanvas = document.getElementById("water-overlay");
 const waterCtx = waterCanvas.getContext("2d");
@@ -767,6 +774,7 @@ function resizeWaterCanvas() {
 
 window.addEventListener("resize", resizeWaterCanvas);
 resizeWaterCanvas();
+
 
 
 // Ripple system (Phase 2)
@@ -803,6 +811,7 @@ function drawRipples() {
     // subtle bloom (glow)
     waterCtx.shadowColor = "rgba(255, 255, 255, 1)";
     waterCtx.shadowBlur = 5;
+    
 
 
     // highlight ring
@@ -838,7 +847,7 @@ function drawRipples() {
 }
 
 drawRipples();
-
+}
 
 const cursor = document.getElementById("custom-cursor");
 
@@ -901,3 +910,75 @@ window.addEventListener("load", () => {
   }, 1200);
 });
 
+/* ===============================
+   Audio system (BG + Click)
+   =============================== */
+
+const bgMusic = document.getElementById("bg-music");
+const clickSound = document.getElementById("click-sound");
+
+let audioUnlocked = false;
+
+function unlockAudio() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+
+  bgMusic.volume = 0.25;   // subtle background
+  bgMusic.play().catch(() => {});
+
+  clickSound.volume = 0.35;
+
+  window.removeEventListener("click", unlockAudio);
+  window.removeEventListener("keydown", unlockAudio);
+  window.removeEventListener("touchstart", unlockAudio);
+}
+
+// unlock on first interaction (browser rule)
+window.addEventListener("click", unlockAudio);
+window.addEventListener("keydown", unlockAudio);
+window.addEventListener("touchstart", unlockAudio);
+
+// click sound on mouse clicks (after unlock)
+window.addEventListener("mousedown", () => {
+  if (!audioUnlocked) return;
+  clickSound.currentTime = 0;
+  clickSound.play().catch(() => {});
+});
+const MAX_RIPPLES = 6;
+
+
+const rippleLayer = document.getElementById("ambient-ripple");
+
+function spawnAmbientRipple() {
+  if (rippleLayer.children.length >= MAX_RIPPLES) return;
+
+  const ripple = document.createElement("div");
+  ripple.className = "ambient-ripple";
+
+  const size = 140 + Math.random() * 120;
+  ripple.style.width = ripple.style.height = `${size}px`;
+
+  ripple.style.left = `${Math.random() * 100}%`;
+  ripple.style.top = `${Math.random() * 100}%`;
+
+  rippleLayer.appendChild(ripple);
+
+  ripple.addEventListener("animationend", () => {
+    ripple.remove();
+  });
+}
+
+
+function startAmbientRipples() {
+  spawnAmbientRipple();
+
+const next = 500 + Math.random() * 1000;
+  setTimeout(startAmbientRipples, next);
+}
+
+startAmbientRipples();
+
+if (isLowEndDevice) {
+  const canvas = document.getElementById("water-overlay");
+  if (canvas) canvas.style.display = "none";
+}

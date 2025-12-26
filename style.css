@@ -33,7 +33,8 @@ body {
   padding-top: 70px;
   line-height: 1.5;
   /* font-family: "Exo 2", sans-serif; */
-  overflow-y: scroll;   /* keeps page scrollable even without native bar */
+  overflow-y: scroll;
+  /* keeps page scrollable even without native bar */
 }
 
 /* skip link visible on focus */
@@ -183,7 +184,8 @@ body {
 .about .content p {
   text-align: left;
   max-width: 900px;
-  margin: 0 auto;      /* keeps it centered as a block */
+  margin: 0 auto;
+  /* keeps it centered as a block */
   line-height: 1.8;
 }
 
@@ -265,7 +267,7 @@ body {
 
 /* individual tab */
 .service-tab {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.63);
   color: var(--text);
   border: 1px solid rgba(255, 255, 255, 0.06);
   padding: 10px 14px;
@@ -298,19 +300,26 @@ body {
 
 /* =============== Animation placeholder =============== */
 .animation-area {
-  position: relative; 
+  position: relative;
   width: 100%;
   /* max-width: 60%;        👈 20% smaller */
-  aspect-ratio: 16 / 9;          /* forces 16:9 */
+  aspect-ratio: 16 / 9;
+  /* forces 16:9 */
   background: transparent;
 
-  border-radius: 18px;           /* curved corners */
+  border-radius: 18px;
+  /* curved corners */
   border: 1px dashed rgba(255, 255, 255, 0.06);
 
   display: block;
   margin: 0 auto;
 
-  overflow: hidden;              /* IMPORTANT for future animations */
+  overflow: hidden;
+  /* IMPORTANT for future animations */
+}
+#service-animation video {
+  pointer-events: none;
+  user-select: none;
 }
 
 /* =============== Loader Styling  =============== */
@@ -567,6 +576,80 @@ body {
   }
 }
 
+@keyframes neonBreathGlobal {
+  0% {
+    box-shadow:
+      0 0 2px rgba(255,255,255,0.6),
+      0 0 6px rgba(255,255,255,0.4),
+      0 0 12px rgba(255,255,255,0.25);
+  }
+  50% {
+    box-shadow:
+      0 0 10px rgba(255,255,255,1),
+      0 0 22px rgba(255,255,255,0.8),
+      0 0 44px rgba(255,255,255,0.5);
+  }
+  100% {
+    box-shadow:
+      0 0 2px rgba(255,255,255,0.6),
+      0 0 6px rgba(255,255,255,0.4),
+      0 0 12px rgba(255,255,255,0.25);
+  }
+}
+
+#ambient-ripple {
+  position: fixed;
+  inset: 0;
+
+  z-index: 1;            /* above background, below content */
+  pointer-events: none;  /* never blocks interaction */
+  overflow: hidden;
+
+  /* invisible for now */
+}
+.ambient-ripple {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+
+  background: transparent;
+
+  /* the ripple ring */
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.45),
+    0 0 0 6px rgba(255, 255, 255, 0.25),
+    0 0 0 12px rgba(255, 255, 255, 0.12);
+
+  filter: blur(0.6px);
+
+
+  opacity: 0.8;
+  transform: scale(0.02);
+  animation: ambientRippleWave 2.2s ease-out forwards;
+}
+
+@keyframes ambientRippleWave {
+  0% {
+    transform: scale(0.02);
+    opacity: 0.75;
+    box-shadow:
+      0 0 0 1px rgb(255, 255, 255),
+      0 0 0 6px rgba(255,255,255,0.25),
+      0 0 0 12px rgba(255,255,255,0.12);
+  }
+
+  100% {
+    transform: scale(0.34);
+    opacity: 0.08;
+    box-shadow:
+      0 0 0 1px rgb(255, 255, 255),
+      0 0 0 18px rgba(255,255,255,0.08),
+      0 0 0 36px rgba(255,255,255,0.04);
+  }
+}
+
+
 /* =============== NAVBAR =============== */
 .nav {
   background: var(--bg);
@@ -601,13 +684,52 @@ body {
 }
 
 .nav-links {
-  list-style: none;
+  position: absolute;
+  top: calc(100% + 35px); /* directly under the toggle */
+  right: 0;
+  width: 160px;   /* try 180–240px */
+  font-size: 20px;     /* text size */
+  align-items: center;   /* centers items horizontally */
+  text-align: center;    /* centers text */
+
   display: flex;
-  gap: 26px;
+  flex-direction: column;
+  gap: 14px;
+
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(2px);
+
+  outline: 1.5px solid rgb(255, 255, 255);
+  outline-offset: -1.5px;
+
+  padding: 12px 16px;
+  border-radius: 10px;
+
+  list-style: none;
   margin: 0;
-  padding: 0;
-  align-items: center;
+
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+
+  transition: opacity 200ms ease, transform 200ms ease;
+    /* neon glow */
+  box-shadow:
+    0 0 2px rgb(255, 255, 255),
+    0 0 6px rgb(255, 255, 255),
+    0 0 10px rgb(255, 255, 255);
+  
+  animation: neonBreathGlobal 2.2s ease-in-out infinite;
+
 }
+
+.nav-toggle[aria-expanded="true"] + .nav-links {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
 
 .nav-links a {
   color: var(--text);
@@ -618,14 +740,63 @@ body {
 }
 
 .nav-toggle {
-  display: none;
-  background: none;
-  color: var(--text);
-  font-size: 28px;
-  border: none;
+  /* display: none; */
+
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+
+  background: rgb(0, 0, 0);
+  border: 1.5px solid rgb(255, 255, 255);
+
   cursor: pointer;
-  padding: 6px;
+  padding: 0;
+
+  box-shadow:
+      0 0 2px rgb(255, 255, 255),
+      0 0 4px rgb(255, 255, 255);
+
+  display: grid;
+  place-items: center;
+
+  animation: neonBreathGlobal 2.2s ease-in-out infinite;
+
+
+  transition: box-shadow 260ms ease, background 200ms ease;
+
 }
+
+/* @keyframes navBreath {
+  0% {
+    box-shadow:
+      0 0 2px rgb(255, 255, 255),
+      0 0 4px rgb(255, 255, 255);
+  }
+  50% {
+    box-shadow:
+      0 0 11px rgb(255, 255, 255),
+      0 0 22px rgb(255, 255, 255);
+  }
+  100% {
+    box-shadow:
+      0 0 2px rgb(255, 255, 255),
+      0 0 4px rgb(255, 255, 255);
+  }
+} */
+.nav-toggle[aria-expanded="true"] {
+  /* keep breathing – do NOT stop animation */
+  background: rgb(255, 255, 255);
+  border-color: rgb(255, 255, 255);
+}
+
+
+
+.nav-menu {
+  position: relative;
+  display: inline-block; /* <-- ADD THIS */
+}
+
+
 
 .nav-backdrop {
   position: fixed;
@@ -644,17 +815,38 @@ body {
 }
 
 /* MOBILE NAV */
-@media (max-width: 700px) {
+/* @media (max-width: 700px) {
   .nav-toggle {
     display: block;
   }
 
   .nav-links {
-    position: absolute;
-    top: 70px;
-    right: 20px;
-    background: var(--panel);
-    flex-direction: column;
+   position: absolute;
+  top: 70px;
+  right: 20px;
+
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(14px);
+
+  outline: 2.5px solid rgb(255, 255, 255);
+  outline-offset: -1.5px;
+
+  border-radius: 8px;
+  z-index: 1200;
+
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 16px;
+  transform: translateY(-8px);
+  opacity: 0;
+  pointer-events: none;
+  min-width: 200px;
+  transition: transform 200ms ease, opacity 200ms ease; 
+}*/
+  /* modern CSS – safe for all target browsers */
+
+    /* flex-direction: column;
     gap: 10px;
     padding: 12px 16px;
     border-radius: 8px;
@@ -669,13 +861,13 @@ body {
     transform: translateY(0);
     opacity: 1;
     pointer-events: auto;
-  }
+  } */
 
-  .nav-links a {
+  /* .nav-links a {
     display: block;
     padding: 8px 6px;
   }
-}
+} */
 
 /* accessibility helpers */
 [role="menu"] {
@@ -731,6 +923,7 @@ body {
 }
 
 @keyframes rotateWrapper {
+
   /* start slow */
   0% {
     transform: translateY(4px) translateX(-6px) rotate(0deg);
@@ -767,9 +960,7 @@ body {
   object-fit: contain;
 
   filter:
-    drop-shadow(0 0 3px rgba(255,255,255,0.9))
-    drop-shadow(0 0 7px rgba(0,200,255,0.8))
-    drop-shadow(0 0 12px rgba(120,0,255,0.6));
+    drop-shadow(0 0 3px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 7px rgb(255, 255, 255)) drop-shadow(0 0 12px rgb(255, 255, 255));
 
   animation: neonGlowIcon 2.5s ease-in-out infinite;
   /* 2.6 */
@@ -778,21 +969,17 @@ body {
 @keyframes neonGlowIcon {
   0% {
     filter:
-      drop-shadow(0 0 2px rgba(255,255,255,0.75))
-      drop-shadow(0 0 5px rgba(0,200,255,0.55))
-      drop-shadow(0 0 10px rgba(120,0,255,0.3));
+      drop-shadow(0 0 1px rgb(255, 255, 255)) drop-shadow(0 0 3px rgb(255, 255, 255)) drop-shadow(0 0 6px rgb(255, 255, 255));
   }
+
   50% {
     filter:
-      drop-shadow(0 0 8px rgba(255,255,255,1))
-      drop-shadow(0 0 16px rgba(0,200,255,1))
-      drop-shadow(0 0 24px rgba(120,0,255,0.75));
+      drop-shadow(0 0 5px rgba(255, 255, 255, 1)) drop-shadow(0 0 5px rgb(255, 255, 255)) drop-shadow(0 0 15px rgb(255, 255, 255));
   }
+
   100% {
     filter:
-      drop-shadow(0 0 2px rgba(255,255,255,0.75))
-      drop-shadow(0 0 5px rgba(0,200,255,0.55))
-      drop-shadow(0 0 10px rgba(120,0,255,0.3));
+      drop-shadow(0 0 1px rgb(255, 255, 255)) drop-shadow(0 0 3px rgb(255, 255, 255)) drop-shadow(0 0 6px rgb(255, 255, 255));
   }
 }
 
@@ -822,11 +1009,11 @@ body {
   padding: 10px 16px;
   border-radius: 10px;
   background: rgb(0, 0, 0);
-  border: 1px solid rgba(135, 135, 135, 0.641);
-  transition: transform 180ms ease, 
-              background 180ms ease, 
-              box-shadow 220ms ease, 
-              border-color 180ms ease;
+  border: 1px solid rgb(255, 255, 255);
+  transition: transform 180ms ease,
+    background 180ms ease,
+    box-shadow 220ms ease,
+    border-color 180ms ease;
 }
 
 
@@ -836,8 +1023,8 @@ body {
   transform: translateY(-3px);
   background: rgba(255, 255, 255, 0);
   border-color: rgb(255, 255, 255);
-  box-shadow: 0 0  9px rgb(255, 255, 255), 
-              0 0 28px rgba(76, 64, 255, 0.665);
+  box-shadow: 0 0 9px rgb(255, 255, 255),
+    0 0 18px rgb(255, 255, 255);
 }
 
 /* ============================================================
@@ -861,17 +1048,17 @@ body {
   cursor: pointer;
   border-radius: 8px;
   background: rgb(0, 0, 0);
-  border: 1px solid rgb(135,135,135);
+  border: 1px solid rgb(255, 255, 255);
   color: var(--text);
   transition: 180ms ease;
 }
 
 .copy-btn:hover {
-    transform: translateY(-3px);
+  transform: translateY(-3px);
   background: rgba(255, 255, 255, 0);
   border-color: rgb(255, 255, 255);
-  box-shadow: 0 0  9px rgb(255, 255, 255), 
-              0 0 28px rgba(76, 64, 255, 0.665);
+  box-shadow: 0 0 9px rgb(255, 255, 255),
+    0 0 18px rgb(255, 255, 255);
 }
 
 
@@ -881,28 +1068,34 @@ body {
   width: 55px;
   height: 55px;
   object-fit: contain;
-  z-index: 2; /* keep above glow */
+  z-index: 2;
+  /* keep above glow */
 }
 
 
 /* =============== Custom Vertical Scrollbar =============== */
 
 ::-webkit-scrollbar {
-  width: 3px;                 /* thin scrollbar */
+  width: 3px;
+  /* thin scrollbar */
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;    /* remove ugly track */
+  background: transparent;
+  /* remove ugly track */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(255, 255, 255);     /* white, semi-transparent */
+  background: rgb(255, 255, 255);
+  /* white, semi-transparent */
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.995);  /* glow like section separator */
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.995);
+  /* glow like section separator */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.973);     /* brighter on hover */
+  background: rgba(255, 255, 255, 0.973);
+  /* brighter on hover */
   box-shadow: 0 0 14px rgb(255, 255, 255);
 }
 
@@ -924,10 +1117,11 @@ html {
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.6);
+  background: rgba(255, 255, 255, 0.6);
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 /* remove any scrollbar corner */
@@ -974,11 +1168,14 @@ html {
 
 .custom-scrollbar {
   position: fixed;
-  right: 14px;                /* distance from page edge - adjust if needed */
+  right: 14px;
+  /* distance from page edge - adjust if needed */
   top: 0;
   height: 100vh;
-  width: 18px;                /* space reserved for the custom scrollbar */
-  pointer-events: none;       /* allow clicks through except on the thumb */
+  width: 18px;
+  /* space reserved for the custom scrollbar */
+  pointer-events: none;
+  /* allow clicks through except on the thumb */
   z-index: 9999;
   display: flex;
   align-items: flex-start;
@@ -988,24 +1185,27 @@ html {
 /* the invisible track that fills the vertical area */
 .custom-scrollbar .track {
   position: relative;
-  width: 6px;                 /* visible width of the line */
+  width: 6px;
+  /* visible width of the line */
   height: 100%;
   pointer-events: none;
   display: block;
 }
 
-/* the draggable thumb (the visible glowing bar)ssssdsd */ 
+/* the draggable thumb (the visible glowing bar)ssssdsd */
 .custom-scrollbar .thumb {
   position: absolute;
   left: 0;
   width: 6px;
-  height: 80px;               /* initial; JS will resize */
+  height: 80px;
+  /* initial; JS will resize */
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.863);
-  box-shadow: 0 0 10px rgba(255,255,255,0.45);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.45);
   opacity: 0.95;
   transform: translateY(0);
-  pointer-events: auto;       /* allow interaction */
+  pointer-events: auto;
+  /* allow interaction */
   cursor: grab;
   transition: box-shadow 120ms ease, opacity 120ms ease;
 }
@@ -1013,19 +1213,26 @@ html {
 /* visual feedback while dragging */
 .custom-scrollbar .thumb:active {
   cursor: grabbing;
-  box-shadow: 0 0 14px rgba(255,255,255,0.85);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.85);
   opacity: 1;
 }
 
 /* hide the overlay on very small widths if it interferes */
 @media (max-width: 700px) {
-  .custom-scrollbar { display: none; }
+  .custom-scrollbar {
+    display: none;
+  }
 }
 
 /* optional: if you still want to reduce native scrollbar visual clutter,
    keep the earlier "thin" rules too (they won't affect the overlay). */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); }
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.06);
+}
 
 /* Remove native scrollbar completely (Chrome, Edge, Safari, Opera) */
 ::-webkit-scrollbar {
@@ -1041,14 +1248,18 @@ html {
 
 /* ---------------- Hide native horizontal scrollbar on .services-tabs ---------------- */
 .services-tabs {
-  overflow-x: auto;         /* keep horizontal scrolling behavior */
-  scrollbar-width: none;    /* firefox */
-  -ms-overflow-style: none; /* IE 10+ */
+  overflow-x: auto;
+  /* keep horizontal scrolling behavior */
+  scrollbar-width: none;
+  /* firefox */
+  -ms-overflow-style: none;
+  /* IE 10+ */
 }
 
 /* hide webkit scrollbar specifically for the tabs area */
 .services-tabs::-webkit-scrollbar {
-  height: 0;                /* remove native horizontal bar */
+  height: 0;
+  /* remove native horizontal bar */
   display: none;
 }
 
@@ -1056,20 +1267,25 @@ html {
 .custom-hscroll {
   position: relative;
   width: 100%;
-  height: 18px;                 /* total space reserved under tabs */
+  height: 18px;
+  /* total space reserved under tabs */
   display: block;
-  margin-top: 8px;              /* small gap below tabs */
-  pointer-events: none;         /* allow clicks through except on thumb */
+  margin-top: 8px;
+  /* small gap below tabs */
+  pointer-events: none;
+  /* allow clicks through except on thumb */
 }
 
 /* track (thin centered line) */
 .custom-hscroll .track {
   position: absolute;
-  left: 8px;                    /* small inset to align with tab content */
+  left: 8px;
+  /* small inset to align with tab content */
   right: 8px;
   top: 50%;
   transform: translateY(-50%);
-  height: 6px;                  /* visible line height */
+  height: 6px;
+  /* visible line height */
   border-radius: 6px;
   background: transparent;
   pointer-events: none;
@@ -1082,20 +1298,27 @@ html {
   transform: translateY(-50%) translateX(0);
   height: 6px;
   border-radius: 6px;
-  width: 80px;                  /* initial - JS will resize */
+  width: 80px;
+  /* initial - JS will resize */
   background: rgba(255, 255, 255, 0.863);
   box-shadow: 0 0 2px rgb(255, 255, 255);
-  pointer-events: auto;         /* allow dragging */
+  pointer-events: auto;
+  /* allow dragging */
   cursor: grab;
   transition: box-shadow 120ms ease, opacity 120ms ease;
 }
 
 /* visuals while dragging */
-.custom-hscroll .thumb:active { cursor: grabbing; box-shadow: 0 0 18px rgb(255, 255, 255); }
+.custom-hscroll .thumb:active {
+  cursor: grabbing;
+  box-shadow: 0 0 18px rgb(255, 255, 255);
+}
 
 /* hide on small screens if it gets crowded */
 @media (max-width: 640px) {
-  .custom-hscroll { display: none; }
+  .custom-hscroll {
+    display: none;
+  }
 }
 
 /* =============== Idle Animation Fade =============== */
@@ -1108,13 +1331,23 @@ html {
 }
 
 @keyframes idleFadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes idleFadeOut {
-  from { opacity: 1; }
-  to   { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
 }
 
 .animation-area {
@@ -1127,10 +1360,12 @@ html {
     0 0 8px rgb(254, 254, 254),
     0 0 16px rgb(240, 255, 253),
     0 0 32px rgb(213, 239, 255);
-  animation: neonBreath 2.25s ease-in-out infinite;
+  /* animation: neonBreath 2.25s ease-in-out infinite; */
+  animation: neonBreathGlobal 2.2s ease-in-out infinite;
+
 }
 
-@keyframes neonBreath {
+/* @keyframes neonBreath {
   0% {
     box-shadow:
       0 0 2px rgb(255, 255, 255),
@@ -1151,7 +1386,7 @@ html {
       0 0 3px rgba(255, 255, 255),
       0 0 5px rgba(255, 255, 255);
   }
-}
+} */
 
 /* Water ripple overlay (transparent, non-interactive) */
 #water-overlay {
@@ -1177,9 +1412,10 @@ html {
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  
 
-  background: #ffffff; /* fill the center */
+
+  background: #ffffff;
+  /* fill the center */
   border: 2px solid rgb(0, 0, 0);
   box-shadow:
     0 0 10px rgba(47, 255, 255, 0.7),
@@ -1219,8 +1455,10 @@ html {
    Custom text selection
    =============================== */
 ::selection {
-  background: #ffffff;  /* selection highlight */
-  color: #000000;       /* selected text color */
+  background: #ffffff;
+  /* selection highlight */
+  color: #000000;
+  /* selected text color */
 }
 
 ::-moz-selection {
@@ -1246,26 +1484,32 @@ html {
    =============================== */
 .scroll-vignette {
   position: fixed;
-  top: 65px;          /* height of navbar */
+  top: 60px;            /* height of navbar */
   left: 0;
   right: 0;
   bottom: 0;
-  pointer-events: none;
-  z-index: 100; /* below cursor, above content */
 
-  --top-strength: 0;
-  --bottom-strength: 1;
+  pointer-events: none;
+  z-index: 100;         /* below cursor, above content */
+
+  /* strength controls */
+  --top-strength: 0.8;
+  --bottom-strength: 0.8;
 
   background:
+    /* TOP vignette: strongest at very top */
     linear-gradient(
       to bottom,
       rgba(0, 0, 0, var(--top-strength)) 0%,
-      transparent 20%
+      rgba(0, 0, 0, 0.6) 12%,
+      transparent 30%
     ),
+    /* BOTTOM vignette: strongest at very bottom */
     linear-gradient(
       to top,
       rgba(0, 0, 0, var(--bottom-strength)) 0%,
-      transparent 20%
+      rgba(0, 0, 0, 0.6) 12%,
+      transparent 30%
     );
 }
 
@@ -1340,3 +1584,5 @@ html {
       0 0 18px rgba(255, 255, 255, 0.2);
   }
 }
+
+
