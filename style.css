@@ -98,7 +98,7 @@ body {
 
 .hero-inner {
   max-width: 760px;
-  margin: 0 auto;
+  margin:  0 auto;
   text-align: center;
   animation: fadeUp 560ms ease-out both;
 }
@@ -1678,3 +1678,9 @@ background:
   align-items: center;
 }
 
+/* Mobile-only hero spacing */
+@media (max-width: 640px) {
+  .hero-inner {
+    margin-top: 80px;
+  }
+}
