@@ -944,7 +944,7 @@ window.addEventListener("mousedown", () => {
   clickSound.currentTime = 0;
   clickSound.play().catch(() => {});
 });
-const MAX_RIPPLES = 6;
+const MAX_RIPPLES = 8;
 
 
 const rippleLayer = document.getElementById("ambient-ripple");
