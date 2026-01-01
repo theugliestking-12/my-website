@@ -285,7 +285,7 @@ body {
 .services-tabs {
   display: flex;
   flex-wrap: nowrap;
-  /* justify-content: center; */
+  justify-content: center;
   gap: 10px;
   overflow-x: auto;
   padding: 6px 8px;
@@ -322,6 +322,14 @@ body {
   transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
   white-space: nowrap;
   font-family: var(--font-body);
+}
+/* ---- scroll safety (ADD THIS) ---- */
+.services-tabs {
+  scroll-snap-type: x proximity;
+}
+
+.service-tab {
+  scroll-snap-align: start;
 }
 
 .service-tab:hover,
