@@ -982,3 +982,24 @@ if (isLowEndDevice) {
   const canvas = document.getElementById("water-overlay");
   if (canvas) canvas.style.display = "none";
 }
+
+let musicStarted = false;
+
+function startBackgroundMusic() {
+  if (musicStarted) return;
+
+  const bgMusic = document.getElementById("bg-music");
+  if (!bgMusic) return;
+
+  bgMusic.volume = 0.4;
+
+  bgMusic.play().then(() => {
+    musicStarted = true;
+  }).catch(() => {
+    // ignored — user hasn’t interacted yet
+  });
+}
+
+// Start music on first interaction
+document.addEventListener("click", startBackgroundMusic, { once: true });
+document.addEventListener("touchstart", startBackgroundMusic, { once: true });
