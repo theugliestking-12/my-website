@@ -1691,3 +1691,46 @@ background:
     margin-top: 80px;
   }
 }
+
+/* ===== Hero benefits list (clean) ===== */
+.hero-benefits{
+  list-style: none;
+  padding: 0;
+  margin: 14px auto 0;
+  max-width: 680px;
+
+  display: grid;
+  gap: 8px;
+
+  text-align: center;
+  color: rgba(255,255,255,0.85);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.hero-benefits li{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.hero-benefits li::before{
+  content: "✦";
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+/* About bullets — better wrap alignment */
+#about-section p{
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+#about-section p br + br{
+  content: "";
+  display: block;
+  margin-bottom: 16px;
+}
+
+/* ---------new ripple overlay------------ */
